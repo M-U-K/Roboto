@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id           String   @id @default(uuid())
+  fromSymbol   String
+  toSymbol     String
+  amount       Float
+  priceAtTrade Float
+  createdAt    DateTime @default(now())
+}
+
+model Crypto {
+  id              String   @id @default(uuid())
+  symbol          String   @unique
+  totalHoldings   Float
+  lastBuyPrice    Float
+  currentPrice    Float
+  pot             Float  @default(0)
+  sellAt          Float?
+  gainLossPct     Float
+  lastUpdated     DateTime @updatedAt
+
+  lastSellDate    DateTime?
+  lastSellPrice   Float?
+
+  buyTrigger      Int       @default(0) // Score d’achat dynamique
+  status          String    @default("pending-buy") // "pending-buy" ou "pending-sell"
+  trades          TradeEntry[]
+}
+
+model TradeEntry {
+  id           String   @id @default(uuid())
+  cryptoId     String
+  dateBuy      DateTime
+  dateSell     DateTime? 
+  buyPrice     Float
+  sellPrice    Float
+  gainLossPct  Float
+  gainLoss     Float
+  reinvested   Float
+  secured      Float
+  extracted    Float
+  Crypto       Crypto   @relation(fields: [cryptoId], references: [id])
+}
+
+model Wallet {
+  id         String   @id @default(uuid())
+  totalValue Float
+  pot        Float
+  cash       Float
+  security   Float
+  USDC       Float
+  updatedAt  DateTime @updatedAt
+}
