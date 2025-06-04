@@ -17,12 +17,12 @@ async function resetLastBuyToCurrent() {
     );
   }
 
-  console.log("✅ Tous les lastBuyPrice ont été remis à jour.");
+  console.log("Tous les lastBuyPrice ont été remis à jour.");
   await prisma.$disconnect();
 }
 
 resetLastBuyToCurrent().catch((e) => {
-  console.error("❌ Erreur lors du reset:", e);
+  console.error("Erreur lors du reset:", e);
   prisma.$disconnect();
   process.exit(1);
 });

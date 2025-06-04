@@ -24,7 +24,7 @@ export async function GET(
 
     return NextResponse.json(crypto.trades);
   } catch (error) {
-    console.error("❌ Erreur dans GET /api/crypto/[symbol]/trades :", error);
+    console.error("Erreur dans GET /api/crypto/[symbol]/trades :", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

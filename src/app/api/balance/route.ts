@@ -6,10 +6,10 @@ export async function GET() {
 
   try {
     const data = await getBinanceBalance();
-    console.log("✅ Balance Binance reçue :", data);
+    console.log("Balance Binance reçue :", data);
     return NextResponse.json(data);
   } catch (error) {
-    console.error("❌ Erreur Binance :", error);
+    console.error("Erreur Binance :", error);
     return NextResponse.json(
       { error: "Erreur Binance", detail: (error as Error).message },
       { status: 500 }

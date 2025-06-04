@@ -91,7 +91,7 @@ export async function POST(
   const order = await res.json();
 
   if (!res.ok) {
-    console.error("❌ Erreur Binance :", order);
+    console.error("Erreur Binance :", order);
     return NextResponse.json(
       { error: "Erreur Binance", detail: order },
       { status: 500 }
@@ -170,7 +170,7 @@ export async function POST(
     },
   });
 
-  console.log("✅ Crypto vendue :", {
+  console.log("Crypto vendue :", {
     symbol,
     avgSellPrice,
     totalRevenue,

@@ -73,5 +73,5 @@ export async function syncCrypto(symbol: string, referenceSymbol = "USDT") {
     console.log(`🆕 Crypto ajoutée : ${symbol}`);
   }
 
-  console.log(`✅ ${symbol} synchronisé à ${currentPrice} ${referenceSymbol}`);
+  console.log(`${symbol} synchronisé à ${currentPrice} ${referenceSymbol}`);
 }

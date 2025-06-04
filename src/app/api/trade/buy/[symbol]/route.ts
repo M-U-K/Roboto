@@ -49,7 +49,7 @@ export async function POST(
   const order = await res.json();
 
   if (!res.ok) {
-    console.error("❌ Binance error:", order);
+    console.error("Binance error:", order);
     return NextResponse.json(
       { error: "Erreur Binance", detail: order },
       { status: 500 }

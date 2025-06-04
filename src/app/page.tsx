@@ -79,7 +79,7 @@ export default function Home() {
       setCryptos(filtered);
       setWallet(walletData);
     } catch (e) {
-      console.error("❌ Erreur de sync :", e);
+      console.error("Erreur de sync :", e);
     } finally {
       setLoading(false);
       setCountdown(300);

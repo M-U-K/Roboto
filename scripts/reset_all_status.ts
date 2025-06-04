@@ -13,12 +13,12 @@ async function resetAllStatuses() {
     console.log(`🔄 ${crypto.symbol} → status = pending-buy`);
   }
 
-  console.log("✅ Tous les statuts ont été remis à 'pending-buy'.");
+  console.log("Tous les statuts ont été remis à 'pending-buy'.");
   await prisma.$disconnect();
 }
 
 resetAllStatuses().catch((err) => {
-  console.error("❌ Erreur lors du reset des statuts :", err);
+  console.error("Erreur lors du reset des statuts :", err);
   prisma.$disconnect();
   process.exit(1);
 });

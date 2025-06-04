@@ -65,7 +65,7 @@ export async function GET() {
 
     return NextResponse.json(allCryptos);
   } catch (error) {
-    console.error("❌ Erreur dans /api/sync", error);
+    console.error("Erreur dans /api/sync", error);
     return NextResponse.json([]);
   }
 }
