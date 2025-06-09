@@ -6,8 +6,12 @@ export async function updateWallet() {
 
   const totalValue = cryptos.reduce((acc, c) => acc + c.totalHoldings, 0);
 
-  const pot = cryptos
-    .filter((c) => c.symbol !== "USDC")
+  const potOn = cryptos
+    .filter((c) => c.status === "pending-sell" && c.symbol !== "USDC")
+    .reduce((acc, c) => acc + c.pot, 0);
+
+  const potOff = cryptos
+    .filter((c) => c.status === "pending-buy" && c.symbol !== "USDC")
     .reduce((acc, c) => acc + c.pot, 0);
 
   const usdc = cryptos.find((c) => c.symbol === "USDC")?.totalHoldings || 0;
@@ -19,8 +23,10 @@ export async function updateWallet() {
       where: { id: wallet.id },
       data: {
         totalValue,
-        pot,
+        potOn,
+        potOff,
         USDC: usdc,
+        // cash & security conservés tels quels (non recalculés ici)
       },
     });
     return updated;
@@ -28,7 +34,8 @@ export async function updateWallet() {
     const created = await prisma.wallet.create({
       data: {
         totalValue,
-        pot,
+        potOn,
+        potOff,
         cash: 0,
         security: 0,
         USDC: usdc,

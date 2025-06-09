@@ -63,7 +63,11 @@ export default function Home() {
     return `${base.toFixed(2)}${multiplier > 0 ? ` x10^-${multiplier}` : ""}`;
   };
 
-  const formatNumber = (val: number) => val.toFixed(2);
+  const formatNumber = (val: unknown) => {
+    const num = Number(val);
+    if (isNaN(num)) return "-";
+    return num.toFixed(2);
+  };
 
   async function fetchData() {
     try {

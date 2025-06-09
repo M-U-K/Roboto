@@ -17,45 +17,46 @@ model Transaction {
 }
 
 model Crypto {
-  id              String   @id @default(uuid())
-  symbol          String   @unique
-  totalHoldings   Float
-  lastBuyPrice    Float
-  currentPrice    Float
-  pot             Float  @default(0)
-  sellAt          Float?
-  gainLossPct     Float
-  lastUpdated     DateTime @updatedAt
+  id              String   @id @default(uuid()) //id de la crypto
+  symbol          String   @unique //symbol genre BTC
+  totalHoldings   Float //combien j'ai de la crypto
+  lastBuyPrice    Float //dernier prix d'achat en dollars
+  currentPrice    Float //prix actuel en dollars
+  pot             Float  @default(0) //prix en dollars du pot attribué a la crypto
+  sellAt          Float? //souvent prix en dollars du pot + 5%
+  gainLossPct     Float //état actuel de la crypto en comparant le current price et le last buy price
+  lastUpdated     DateTime @updatedAt //date derniere update (toute les 5min j'actualise le currentPrice)
 
-  lastSellDate    DateTime?
-  lastSellPrice   Float?
+  lastSellDate    DateTime? //date de la derniere vente
+  lastSellPrice   Float? //prix de la derniere vente en dollars
 
-  buyTrigger      Int       @default(0) // Score d’achat dynamique
-  status          String    @default("pending-buy") // "pending-buy" ou "pending-sell"
-  trades          TradeEntry[]
+  buyTrigger      Int       @default(0) // Score d’achat dynamique //quand acheter (faudra revoir le truc)
+  status          String    @default("pending-buy") // "pending-buy" ou "pending-sell" //état de la crypto si elle est en attente de vente ou d'achat
+  trades          TradeEntry[] //ca table de transaction attitré
 }
 
 model TradeEntry {
   id           String   @id @default(uuid())
-  cryptoId     String
-  dateBuy      DateTime
-  dateSell     DateTime? 
-  buyPrice     Float
-  sellPrice    Float
-  gainLossPct  Float
-  gainLoss     Float
-  reinvested   Float
-  secured      Float
-  extracted    Float
+  cryptoId     String //le nom de la crypto je crois ou de la table crypto aligné
+  dateBuy      DateTime //date d'achat
+  dateSell     DateTime? //date de vente
+  buyPrice     Float //prix ou la crypto c'est achété en dollars
+  sellPrice    Float //prix ou la crypto c'est vendu en dollars
+  gainLossPct  Float //gain en % par rapport au prix d'achat par exemple j'acchete a 100 je vend a 110 j'ai +10%
+  gainLoss     Float //gain en dollars 
+  reinvested   Float //montant qui augmente le pot de la crypto
+  secured      Float //montant qu'on sort de la crypto et qu'on place en security
+  extracted    Float //montant qu'on sort de la crypto et place en cash
   Crypto       Crypto   @relation(fields: [cryptoId], references: [id])
 }
 
 model Wallet {
   id         String   @id @default(uuid())
-  totalValue Float
-  pot        Float
-  cash       Float
-  security   Float
-  USDC       Float
+  totalValue Float  //somme de potOn+usdc
+  potOn      Float @default(0) //somme des pots de toutes les crypto actif
+  potOff     Float @default(0) //somme des pots de toutes les crypto inactif
+  cash       Float  //total d'argent que je peux recuperer reset a 0 lors d'une retir
+  security   Float  //total de usdc que je stock ocaou y a un probleme ou besoin de payer une crypto qui est dans en perte
+  USDC       Float  //valeur pas tres utiles generalement c'est juste potOff+cash+sécurité 
   updatedAt  DateTime @updatedAt
 }
