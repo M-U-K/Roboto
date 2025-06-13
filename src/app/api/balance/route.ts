@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBinanceBalance } from "@/lib/binance";
+import { getBinanceBalance } from "../../../lib/binance";
 
 export async function GET() {
   console.log("🔔 API /api/balance appelée");

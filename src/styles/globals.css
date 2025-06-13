@@ -2,7 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply background text-text;
-  font-family: "Manrope", sans-serif;
-}
+@config "../../tailwind.config.js"; /* depuis src/app/globals.css */

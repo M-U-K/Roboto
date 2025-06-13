@@ -1,4 +1,4 @@
-import { updateWallet } from "@/lib/updateWallet";
+import { updateWallet } from "../../../lib/updateWallet";
 import { NextResponse } from "next/server";
 
 export async function GET() {

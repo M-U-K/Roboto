@@ -1,5 +1,4 @@
-// src/app/layout.tsx
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import { Manrope, Orbitron } from "next/font/google";
 
 export const metadata = {
@@ -30,7 +29,7 @@ export default function RootLayout({
       className={`${manrope.variable} ${orbitron.variable}`}
       suppressHydrationWarning
     >
-      <body className="background text-text font-sans">{children}</body>
+      <body className="bg-background text-text font-sans">{children}</body>
     </html>
   );
 }

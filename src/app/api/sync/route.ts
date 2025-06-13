@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { updateActiveCryptosFromWallet } from "@/lib/updateFromBinance";
-import { syncCrypto } from "@/lib/syncCrypto";
+import { updateActiveCryptosFromWallet } from "../../../lib/updateFromBinance";
+import { syncCrypto } from "../../../lib/syncCrypto";
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
