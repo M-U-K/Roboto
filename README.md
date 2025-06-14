@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 Roboto — Trading Bot Automatisé sur Binance
 
-## Getting Started
+Roboto est une application fullstack conçue pour **automatiser l’achat et la revente de cryptomonnaies** via l’API Binance.  
+Elle s’appuie sur un algorithme décisionnel basé sur l’analyse de tendance et la volatilité du marché, et fournit un **dashboard synthwave élégant** pour suivre les performances en temps réel.
 
-First, run the development server:
+---
+
+## 🚀 Fonctionnalités principales
+
+- 🔄 **Synchronisation automatique avec Binance**
+- 📊 **Analyse multi-critères** (variation journalière, hebdo, stagnation, BTC global…)
+- 🤖 **Trigger algorithmique intelligent** (score par crypto, seuil d’achat/déclenchement)
+- 💰 **Gestion du portefeuille** (USDC, cash, sécurité, pot actif/inactif)
+- 🧠 **Tableau de bord visuel** en Next.js + Tailwind avec DA synthwave personnalisée
+- 🔐 **Accès public/privé différencié** (bientôt avec IP-lock et contrôle manuel)
+
+---
+
+## 🧱 Stack technique
+
+- **Next.js 14 (App Router)**
+- **Prisma ORM** (SQLite pour dev, PostgreSQL possible)
+- **TailwindCSS** + typographie `Orbitron` & `Manrope`
+- **API Binance (REST)** via `axios`
+- Composants modulaires (`CryptoGrid`, `WalletCard`, `BotStatusCard`, etc.)
+
+---
+
+## 📦 Lancer le projet en local
 
 ```bash
+npm install
+npx prisma generate
+npx prisma migrate dev --name init
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Le projet sera disponible sur : [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Structure du projet
 
-## Learn More
+```
+/src
+ ├── app                → Pages Next.js (app router)
+ ├── components         → Composants UI réutilisables
+ ├── lib                → Logique métier (sync, algorithme, update)
+ ├── styles             → Fichiers CSS / Tailwind
+ └── prisma             → Schéma de base de données + SQLite
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧠 Algorithme de trigger
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Un score est attribué à chaque crypto selon des conditions de marché (prix, volume, tendance, comportement du BTC...).
 
-## Deploy on Vercel
+> Un achat automatique est déclenché lorsque le score ≥ trigger
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Exemples de conditions :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 📉 Baisse sur 30j ou 7j : +1 à +2
+- ⚖️ Stagnation : +1
+- 🚀 Hausse brutale : -3
+- ⚠️ BTC en surchauffe : -2 à -3
+
+---
+
+## 📈 Aperçu visuel
+
+![Preview](https://github.com/user-attachments/assets/86a16f98-8511-4757-a5bc-00ab2f65a3f2)
+
+---
+
+## ✨ Auteur
+
+Développé par **M.U.K**
