@@ -10,7 +10,7 @@ type BlockProps = {
 export default function BlockWrapper({
   children,
   defaultPosition,
-  defaultSize = { width: 300, height: 200 },
+  defaultSize = { width: 300, height: 250 },
 }: BlockProps) {
   return (
     <Rnd
@@ -24,7 +24,10 @@ export default function BlockWrapper({
       dragHandleClassName="drag-handle"
       className="bg-surface border-default rounded text-text box-border"
     >
-      <div className="rounded drag-handle cursor-move select-none w-full h-full overflow-auto p-4 box-border ">
+      <div
+        className="rounded drag-handle cursor-move select-none w-full h-full overflow-auto box-border"
+        style={{ paddingLeft: "20px" }}
+      >
         {children}
       </div>
     </Rnd>
