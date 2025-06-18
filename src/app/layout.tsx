@@ -8,13 +8,13 @@ export const metadata = {
 
 const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["700"],
   variable: "--font-manrope",
 });
 
 const orbitron = Orbitron({
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["400", "700"],
   variable: "--font-orbitron",
 });
 

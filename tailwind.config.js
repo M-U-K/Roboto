@@ -24,6 +24,11 @@ module.exports = {
           muted: "#777777",
         },
       },
+      fontSize: {
+        monney: "40px",
+        heading: "32px",
+        body: "20px",
+      },
       borderRadius: {
         DEFAULT: "15px",
       },
