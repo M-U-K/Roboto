@@ -3,3 +3,12 @@
 @tailwind utilities;
 
 @config "../../tailwind.config.js"; /* depuis src/app/globals.css */
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
