@@ -1,8 +1,39 @@
+"use client";
+import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
 import { useRouter } from "next/navigation";
 
+type Wallet = {
+  totalValue: number;
+  potOn: number;
+  potOff: number;
+  cash: number;
+  security: number;
+  USDC: number;
+};
+
 export default function SoldeGlobal() {
   const router = useRouter();
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+
+  useEffect(() => {
+    const fetchWallet = async () => {
+      try {
+        const res = await fetch("/api/wallet");
+        const data = await res.json();
+        setWallet(data);
+      } catch (error) {
+        console.error("Erreur fetch wallet", error);
+      }
+    };
+
+    fetchWallet();
+  }, []);
+
+  if (!wallet) {
+    return <div>Chargement...</div>;
+  }
+
   return (
     <BlockWrapper
       defaultPosition={{ x: 20, y: 20 }}
@@ -10,26 +41,17 @@ export default function SoldeGlobal() {
     >
       <div className="w-full max-w-sm text-foreground">
         <div className="text-primary text-heading pt-[20px]">Solde Global</div>
-        <div className="text-monney pb-[30px]">$2800</div>
+        <div className="text-monney pb-[30px]">
+          ${wallet.totalValue.toFixed(2)}
+        </div>
 
         <div className="grid grid-cols-2">
-          <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
-            <div className="text-pink pt-[18px]">Pot actif</div>
-            <div className="text-monney font-bold pb-[20px]">$1000</div>
-          </div>
-          <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
-            <div className="text-pink pt-[18px]">Pot actif</div>
-            <div className="text-monney font-bold pb-[20px]">$1000</div>
-          </div>
-          <div className="bg-background border-default rounded pl-[15px] pr-[15px] w-[160px] box-border">
-            <div className="text-pink pt-[18px]">Pot actif</div>
-            <div className="text-monney font-bold pb-[20px]">$1000</div>
-          </div>
-          <div className="bg-background border-default rounded pl-[15px] pr-[15px] w-[160px] box-border">
-            <div className="text-pink pt-[18px]">Pot actif</div>
-            <div className="text-monney font-bold pb-[20px]">$1000</div>
-          </div>
+          <Card label="Pot actif" value={wallet.potOn.toFixed(2)} />
+          <Card label="Pot inactif" value={wallet.potOff.toFixed(2)} />
+          <Card label="Cash" value={wallet.cash.toFixed(2)} />
+          <Card label="Sécurité" value={wallet.security.toFixed(2)} />
         </div>
+
         <div className="text-right">
           <div className="mt-[10px] w-auto">
             <div
@@ -42,5 +64,14 @@ export default function SoldeGlobal() {
         </div>
       </div>
     </BlockWrapper>
+  );
+}
+
+function Card({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
+      <div className="text-pink pt-[18px]">{label}</div>
+      <div className="text-monney font-bold pb-[20px]">${value}</div>
+    </div>
   );
 }
