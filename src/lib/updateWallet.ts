@@ -26,7 +26,6 @@ export async function updateWallet() {
         potOn,
         potOff,
         USDC: usdc,
-        // cash & security conservés tels quels (non recalculés ici)
       },
     });
     return updated;
