@@ -3,6 +3,8 @@
 import { ReactNode, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 
+let globalZIndex = 10;
+
 type BlockProps = {
   children: ReactNode;
   defaultPosition: { x: number; y: number };
@@ -23,6 +25,8 @@ export default function BlockWrapper({
     bottom: number;
   } | null>(null);
 
+  const [zIndex, setZIndex] = useState(1);
+
   useLayoutEffect(() => {
     if (containerRef.current) {
       const { clientWidth, clientHeight } = containerRef.current;
@@ -35,11 +39,17 @@ export default function BlockWrapper({
     }
   }, [containerRef, size]);
 
+  function bringToFront() {
+    globalZIndex += 1;
+    setZIndex(globalZIndex);
+  }
+
   return (
     constraints && (
       <motion.div
         className="absolute bg-surface border-default rounded text-text box-border"
         drag
+        onPointerDown={bringToFront}
         dragConstraints={constraints}
         dragElastic={0.3}
         dragMomentum
@@ -54,6 +64,7 @@ export default function BlockWrapper({
           height: size.height,
           x: defaultPosition.x,
           y: defaultPosition.y,
+          zIndex, // ← ici
         }}
       >
         <div className="rounded cursor-move select-none w-full h-full overflow-auto box-border scrollbar-hidden pl-[5%] pr-[5%] pb-[2.5%]">
