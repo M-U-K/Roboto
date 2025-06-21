@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
 
 const API_KEY = process.env.BINANCE_API_KEY!;
 const PRIVATE_KEY_PATH = process.env.BINANCE_RSA_PRIVATE_PATH!;

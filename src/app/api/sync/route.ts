@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { updateActiveCryptosFromWallet } from "../../../lib/updateFromBinance";
 import { syncCrypto } from "../../../lib/syncCrypto";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
 
 export async function GET() {
   try {

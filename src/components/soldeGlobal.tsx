@@ -12,7 +12,11 @@ type Wallet = {
   USDC: number;
 };
 
-export default function SoldeGlobal() {
+export default function SoldeGlobal({
+  containerRef,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}) {
   const router = useRouter();
   const [wallet, setWallet] = useState<Wallet | null>(null);
 
@@ -36,12 +40,13 @@ export default function SoldeGlobal() {
 
   return (
     <BlockWrapper
-      defaultPosition={{ x: 20, y: 20 }}
+      defaultPosition={{ x: 440, y: 20 }}
       size={{ width: 400, height: 450 }}
+      containerRef={containerRef}
     >
       <div className="w-full max-w-sm text-foreground">
         <div className="text-primary text-heading pt-[20px]">Solde Global</div>
-        <div className="text-monney pb-[30px]">
+        <div className="text-monney pb-[10px]">
           ${wallet.totalValue.toFixed(2)}
         </div>
 

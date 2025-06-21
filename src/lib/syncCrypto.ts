@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function syncCrypto(symbol: string, referenceSymbol = "USDT") {
   if (symbol === referenceSymbol) return;

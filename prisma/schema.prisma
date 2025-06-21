@@ -60,3 +60,12 @@ model Wallet {
   USDC       Float  //valeur pas tres utiles generalement c'est juste potOff+cash+sécurité 
   updatedAt  DateTime @updatedAt
 }
+
+model State {
+  id            Int     @id @default(1)
+  isActive      Int //état du système si il est actif ou non 
+  nbrCrypto     Int //le nombre de crypto actif
+  nbrCryptoOn   Int //nombre de crypto en gain
+  nbrCryptoOff  Int //nombre de crypto en perte
+  totalGain     Float //gain total depuis le debut stocké et gardé
+}
