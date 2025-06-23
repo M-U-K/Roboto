@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
+import { useSync } from "@/context/syncContext";
 
 type State = {
   isActive: number;
@@ -16,24 +17,35 @@ export default function EtatSysteme({
   containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [state, setState] = useState<State | null>(null);
+  const [timeLeft, setTimeLeft] = useState("05:00");
+
+  const { lastSync, syncing } = useSync();
 
   useEffect(() => {
     const fetchState = async () => {
-      try {
-        const res = await fetch("/api/state");
-        const data = await res.json();
-        setState(data);
-      } catch (error) {
-        console.error("Erreur fetch state", error);
-      }
+      const res = await fetch("/api/state");
+      const data = await res.json();
+      setState(data);
     };
 
     fetchState();
-  }, []);
+  }, [lastSync]);
 
-  if (!state) {
-    return <div>Chargement...</div>;
-  }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const delta = 300_000 - (Date.now() - lastSync);
+      const remaining = Math.max(0, delta);
+      const minutes = Math.floor(remaining / 60000)
+        .toString()
+        .padStart(2, "0");
+      const seconds = Math.floor((remaining % 60000) / 1000)
+        .toString()
+        .padStart(2, "0");
+      setTimeLeft(`${minutes}:${seconds}`);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lastSync]);
 
   return (
     <BlockWrapper
@@ -43,15 +55,28 @@ export default function EtatSysteme({
     >
       <div className="w-full max-w-sm text-foreground">
         <div className="text-primary text-heading pt-[20px]">État Système</div>
+
         <div className="text-monney pb-[10px]">
-          {state.isActive ? "✅ Actif" : "⛔ Inactif"}
+          {state
+            ? state.isActive
+              ? "✅ Actif"
+              : "⛔ Inactif"
+            : "Chargement..."}
         </div>
 
+        {syncing ? (
+          <div className="text-sm text-muted pb-4">🔄 Sync en cours...</div>
+        ) : (
+          <div className="text-sm text-muted pb-4">
+            ⏱ Prochaine sync : {timeLeft}
+          </div>
+        )}
+
         <div className="grid grid-cols-2">
-          <Card label="Cryptos totales" value={state.nbrCrypto} />
-          <Card label="En gain" value={state.nbrCryptoOn} />
-          <Card label="En perte" value={state.nbrCryptoOff} />
-          <Card label="Gain total" value={state.totalGain} isDollar />
+          <Card label="Cryptos totales" value={state?.nbrCrypto} />
+          <Card label="En gain" value={state?.nbrCryptoOn} />
+          <Card label="En perte" value={state?.nbrCryptoOff} />
+          <Card label="Gain total" value={state?.totalGain} isDollar />
         </div>
       </div>
     </BlockWrapper>
@@ -64,18 +89,18 @@ function Card({
   isDollar = false,
 }: {
   label: string;
-  value: number;
+  value: number | undefined;
   isDollar?: boolean;
 }) {
   return (
     <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
       <div className="text-pink pt-[18px]">{label}</div>
       <div className="text-monney font-bold pb-[20px]">
-        {isDollar
-          ? value !== undefined
+        {value !== undefined
+          ? isDollar
             ? `$${value.toFixed(2)}`
-            : "-"
-          : value ?? "-"}
+            : value
+          : "-"}
       </div>
     </div>
   );

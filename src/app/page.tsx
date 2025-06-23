@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import SoldeGlobal from "../components/soldeGlobal";
 import EtatSysteme from "@/components/etatSysteme";
+import CryptoTable from "@/components/listeCryptos";
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,6 +15,7 @@ export default function HomePage() {
     >
       <EtatSysteme containerRef={containerRef} />
       <SoldeGlobal containerRef={containerRef} />
+      <CryptoTable containerRef={containerRef} />
     </div>
   );
 }

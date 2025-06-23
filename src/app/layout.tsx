@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Manrope, Orbitron } from "next/font/google";
+import { SyncProvider } from "@/context/syncContext";
 
 export const metadata = {
   title: "Roboto",
@@ -29,7 +30,9 @@ export default function RootLayout({
       className={`${manrope.variable} ${orbitron.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-background text-text font-sans">{children}</body>
+      <body className="bg-background text-text font-sans">
+        <SyncProvider>{children}</SyncProvider>
+      </body>
     </html>
   );
 }

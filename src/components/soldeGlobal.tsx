@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
 import { useRouter } from "next/navigation";
+import { useSync } from "@/context/syncContext"; // ✅ Import du contexte
 
 type Wallet = {
   totalValue: number;
@@ -19,6 +20,7 @@ export default function SoldeGlobal({
 }) {
   const router = useRouter();
   const [wallet, setWallet] = useState<Wallet | null>(null);
+  const { lastSync } = useSync(); // ✅ Récupération de la dernière sync
 
   useEffect(() => {
     const fetchWallet = async () => {
@@ -31,8 +33,8 @@ export default function SoldeGlobal({
       }
     };
 
-    fetchWallet();
-  }, []);
+    fetchWallet(); // 🔁 Refetch à chaque sync
+  }, [lastSync]);
 
   if (!wallet) {
     return <div>Chargement...</div>;
