@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { updateState } from "@/lib/updateState";
 
 export async function GET() {
   try {
-    const state = await prisma.state.findUnique({ where: { id: 1 } });
+    let state = await prisma.state.findUnique({ where: { id: 1 } });
+
+    if (!state) {
+      await updateState();
+      state = await prisma.state.findUnique({ where: { id: 1 } });
+    }
 
     if (!state) {
       return NextResponse.json(
-        { error: "Aucun état trouvé." },
+        { error: "État introuvable même après tentative de création." },
         { status: 404 }
       );
     }

@@ -23,7 +23,8 @@ export default function CryptoTable({
   containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
-  const { lastSync } = useSync();
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const { lastSync, triggerSync } = useSync();
 
   useEffect(() => {
     fetch("/api/crypto")
@@ -62,7 +63,7 @@ export default function CryptoTable({
             {cryptos.map((c) => (
               <tr
                 key={c.symbol}
-                className="text-white border-t border-white/10"
+                className="text-white border-t border-white/10 relative"
               >
                 <td>{c.symbol}</td>
                 <td>{formatMoney(c.totalHoldings)}</td>
@@ -81,8 +82,82 @@ export default function CryptoTable({
                 <td>{c.lastSellPrice ? formatNumber(c.lastSellPrice) : "-"}</td>
                 <td>{c.buyTrigger > 0 ? c.buyTrigger : "-"}</td>
                 <td>{c.status === "pending-buy" ? "Achat" : "Vente"}</td>
-                <td>
-                  <span className="text-yellow-300">⋯</span>
+                <td className="relative">
+                  <span
+                    className="text-yellow-300 cursor-pointer"
+                    onClick={() =>
+                      setOpenMenu((prev) =>
+                        prev === c.symbol ? null : c.symbol
+                      )
+                    }
+                  >
+                    ⋯
+                  </span>
+                  {openMenu === c.symbol && (
+                    <div className="absolute right-0 mt-2 w-28 bg-background border border-white/20 rounded shadow z-10">
+                      <div
+                        className="px-3 py-2 hover:bg-white/10 cursor-pointer"
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(
+                              `/api/trade/buy/${c.symbol}`,
+                              {
+                                method: "POST",
+                              }
+                            );
+                            const data = await res.json();
+
+                            if (!res.ok) {
+                              alert(data.error || "Erreur lors de l'achat.");
+                              return;
+                            }
+
+                            triggerSync();
+                            setOpenMenu(null);
+                          } catch (err) {
+                            alert("Erreur réseau.");
+                          }
+                        }}
+                      >
+                        Acheter 10$
+                      </div>
+                      {c.totalHoldings > 1 && (
+                        <div
+                          className={`px-3 py-2 cursor-pointer ${
+                            c.status !== "pending-sell"
+                              ? "text-white/30 cursor-not-allowed"
+                              : "hover:bg-white/10 text-red-400"
+                          }`}
+                          onClick={async () => {
+                            if (c.status !== "pending-sell") return;
+
+                            try {
+                              const res = await fetch(
+                                `/api/trade/sell/${c.symbol}`,
+                                {
+                                  method: "POST",
+                                }
+                              );
+                              const data = await res.json();
+
+                              if (!res.ok) {
+                                console.error("Erreur vente :", data);
+                                alert(data.error || "Erreur lors de la vente.");
+                                return;
+                              }
+                              triggerSync();
+                              setOpenMenu(null);
+                            } catch (err) {
+                              console.error("Erreur fetch :", err);
+                              alert("Erreur réseau.");
+                            }
+                          }}
+                        >
+                          Vendre
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
