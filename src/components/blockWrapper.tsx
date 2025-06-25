@@ -64,7 +64,7 @@ export default function BlockWrapper({
           height: size.height,
           x: defaultPosition.x,
           y: defaultPosition.y,
-          zIndex, // ← ici
+          zIndex,
         }}
       >
         <div className="rounded cursor-move select-none w-full h-full overflow-auto box-border scrollbar-hidden pl-[5%] pr-[5%] pb-[2.5%]">

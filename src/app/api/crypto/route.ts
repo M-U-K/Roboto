@@ -1,4 +1,3 @@
-// app/api/crypto/route.ts
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
