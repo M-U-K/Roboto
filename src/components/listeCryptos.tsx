@@ -29,8 +29,7 @@ export default function CryptoTable({
   useEffect(() => {
     fetch("/api/crypto")
       .then((res) => res.json())
-      .then((data) => setCryptos(data))
-      .catch((err) => console.error("Erreur fetch cryptos :", err));
+      .then((data) => setCryptos(data));
   }, [lastSync]);
 
   return (
@@ -114,8 +113,8 @@ export default function CryptoTable({
 
                             triggerSync();
                             setOpenMenu(null);
-                          } catch (err) {
-                            alert("Erreur réseau.");
+                          } finally {
+                            setOpenMenu(null);
                           }
                         }}
                       >
@@ -147,8 +146,8 @@ export default function CryptoTable({
                               }
                               triggerSync();
                               setOpenMenu(null);
-                            } catch (err) {
-                              console.error("Erreur fetch :", err);
+                            } catch (_err) {
+                              console.error("Erreur fetch :", _err);
                               alert("Erreur réseau.");
                             }
                           }}

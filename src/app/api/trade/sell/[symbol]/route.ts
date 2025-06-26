@@ -21,10 +21,8 @@ function floorToStepSize(qty: number, stepSize: number): string {
   return floored.toFixed(precision);
 }
 
-export async function POST(
-  _req: Request,
-  context: { params?: { symbol?: string } }
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function POST(_req: Request, context: any) {
   const symbol = context.params?.symbol?.toUpperCase();
 
   if (!symbol) {
@@ -54,12 +52,12 @@ export async function POST(
   );
   const infoData = await infoRes.json();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lotFilter = infoData.symbols?.[0]?.filters?.find(
     (f: any) => f.filterType === "LOT_SIZE"
   );
   const minQty = parseFloat(lotFilter?.minQty || "0.00001");
   const stepSize = parseFloat(lotFilter?.stepSize || "0.00001");
-  const maxQty = parseFloat(lotFilter?.maxQty || "999999");
 
   const rawQty = cryptoData.totalHoldings / cryptoData.currentPrice;
   const quantity = parseFloat(floorToStepSize(rawQty, stepSize));
@@ -76,7 +74,6 @@ export async function POST(
   const signature = signQueryRSA(query);
 
   const url = `https://api.binance.com/api/v3/order?${query}&signature=${signature}`;
-
   console.log("📤 Requête envoyée à Binance :", { url });
 
   const res = await fetch(url, {
@@ -98,11 +95,14 @@ export async function POST(
   }
 
   const fills = order.fills || [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const totalQty = fills.reduce(
     (acc: number, f: any) => acc + parseFloat(f.qty),
     0
   );
   const totalRevenue = fills.reduce(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (acc: number, f: any) => acc + parseFloat(f.qty) * parseFloat(f.price),
     0
   );

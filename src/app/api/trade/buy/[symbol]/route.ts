@@ -15,11 +15,9 @@ function signQueryRSA(query: string) {
   return sign.sign(privateKey, "base64");
 }
 
-export async function POST(
-  _req: Request,
-  { params }: { params: { symbol: string } }
-) {
-  const symbol = params.symbol.toUpperCase();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function POST(_req: Request, context: any) {
+  const symbol = context.params.symbol.toUpperCase();
   const investment = 10;
 
   if (symbol === "USDC") {
@@ -55,11 +53,14 @@ export async function POST(
   }
 
   const fills = order.fills || [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const totalQty = fills.reduce(
     (acc: number, f: any) => acc + parseFloat(f.qty),
     0
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const avgPrice =
     fills.reduce(
       (acc: number, f: any) => acc + parseFloat(f.price) * parseFloat(f.qty),

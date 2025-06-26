@@ -1,10 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  context: { params: { symbol: string } }
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(req: Request, context: any) {
   const { symbol } = context.params;
 
   try {

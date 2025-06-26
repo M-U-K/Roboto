@@ -21,11 +21,11 @@ export async function syncCrypto(symbol: string, referenceSymbol = "USDT") {
     throw new Error(`⚠️ Prix invalide pour ${symbol} : ${price}`);
   }
 
-  const accountRes = await fetch("https://api.binance.com/api/v3/account", {
-    headers: {
-      "X-MBX-APIKEY": process.env.BINANCE_API_KEY!,
-    },
-  });
+  //  const accountRes = await fetch("https://api.binance.com/api/v3/account", {
+  //    headers: {
+  //      "X-MBX-APIKEY": process.env.BINANCE_API_KEY!,
+  //    },
+  //  });
 
   const wallet = await prisma.crypto.findUnique({ where: { symbol } });
   const holdings = wallet?.totalHoldings || 0;
