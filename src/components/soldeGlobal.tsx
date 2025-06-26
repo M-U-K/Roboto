@@ -53,10 +53,10 @@ export default function SoldeGlobal({
         </div>
 
         <div className="grid grid-cols-2">
-          <Card label="Pot actif" value={wallet.potOn} />
-          <Card label="Pot inactif" value={wallet.potOff} />
-          <Card label="Cash" value={wallet.cash} />
-          <Card label="Sécurité" value={wallet.security} />
+          <Card label="Pot actif" value={wallet.potOn} color="text-pink" />
+          <Card label="Pot inactif" value={wallet.potOff} color="text-purple" />
+          <Card label="Sécurité" value={wallet.security} color="text-cyan" />
+          <Card label="Cash" value={wallet.cash} color="text-gold" />
         </div>
 
         <div className="text-right">
@@ -74,10 +74,18 @@ export default function SoldeGlobal({
   );
 }
 
-function Card({ label, value }: { label: string; value: number }) {
+function Card({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
   return (
     <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
-      <div className="text-pink pt-[18px]">{label}</div>
+      <div className={`${color} pt-[18px]`}>{label}</div>{" "}
       <div className="text-monney font-bold pb-[20px]">${value.toFixed(2)}</div>
     </div>
   );
