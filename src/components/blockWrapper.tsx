@@ -67,7 +67,7 @@ export default function BlockWrapper({
           zIndex,
         }}
       >
-        <div className="rounded cursor-move select-none w-full h-full overflow-auto box-border scrollbar-hidden pl-[5%] pr-[5%] pb-[2.5%]">
+        <div className="rounded cursor-move select-none w-full h-full overflow-auto box-border scrollbar-hidden pl-[30px] pr-[30px]">
           {children}
         </div>
       </motion.div>

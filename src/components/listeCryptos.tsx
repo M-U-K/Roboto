@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
 import { useSync } from "@/context/syncContext";
+import { useRouter } from "next/navigation";
 
 type Crypto = {
   symbol: string;
@@ -22,6 +23,8 @@ export default function CryptoTable({
 }: {
   containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
+  const router = useRouter();
+
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { lastSync, triggerSync } = useSync();
@@ -38,145 +41,136 @@ export default function CryptoTable({
       defaultPosition={{ x: 860, y: 20 }}
       size={{ width: 950, height: 350 }}
     >
-      <div className="text-heading text-[20px] text-purple font-semibold pb-4">
+      <div className="text-heading text-primary  pt-[20px]">
         Liste des cryptomonnaies
       </div>
 
-      <div className="rounded border border-purple p-4">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-white/70">
-              <th>Crypto</th>
-              <th>Valeur</th>
-              <th>Pot</th>
-              <th>Gain %</th>
-              <th>Actuel</th>
-              <th>Prix achat</th>
-              <th>Prix vente</th>
-              <th>Trigger</th>
-              <th>État</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cryptos.map((c) => (
-              <tr
-                key={c.symbol}
-                className="text-white border-t border-white/10 relative"
-              >
-                <td>{c.symbol}</td>
-                <td>{formatMoney(c.totalHoldings)}</td>
-                <td>{formatMoney(c.pot)}</td>
-                <td
-                  className={
-                    c.gainLossPct >= 0 ? "text-green-400" : "text-red-400"
+      <div className="bg-background border-default rounded p-[10px] mt-[20px]">
+        <div className="flex flex-col space-y-[20px] text-sm w-full p-[10px]">
+          {/* Header */}
+          <div className="grid grid-cols-10 text-left text-body font-semibold px-3">
+            <div>Crypto</div>
+            <div>Valeur</div>
+            <div>Pot</div>
+            <div>Gain %</div>
+            <div>Actuel</div>
+            <div>Achat</div>
+            <div>Vente</div>
+            <div>Trigger</div>
+            <div>État</div>
+            <div>Actions</div>
+          </div>
+
+          {/* Body */}
+          {cryptos.map((c) => (
+            <div
+              key={c.symbol}
+              className="grid grid-cols-10 items-center text-body rounded px-3 py-2 relative"
+            >
+              <div>{c.symbol}</div>
+              <div>{formatMoney(c.totalHoldings)}</div>
+              <div>{formatMoney(c.pot)}</div>
+              <div className={c.gainLossPct >= 0 ? "text-gain" : "text-loss"}>
+                {formatPct(c.gainLossPct)}
+              </div>
+              <div>{formatNumber(c.currentPrice)}</div>
+              <div>
+                {c.lastBuyPrice > 0 ? formatNumber(c.lastBuyPrice) : "-"}
+              </div>
+              <div>{c.lastSellPrice ? formatNumber(c.lastSellPrice) : "-"}</div>
+              <div>{c.buyTrigger > 0 ? c.buyTrigger : "-"}</div>
+              <div>{c.status === "pending-buy" ? "Achat" : "Vente"}</div>
+              <div className="relative">
+                <span
+                  className="text-gold cursor-pointer"
+                  onClick={() =>
+                    setOpenMenu((prev) => (prev === c.symbol ? null : c.symbol))
                   }
                 >
-                  {formatPct(c.gainLossPct)}
-                </td>
-                <td>{formatNumber(c.currentPrice)}</td>
-                <td>
-                  {c.lastBuyPrice > 0 ? formatNumber(c.lastBuyPrice) : "-"}
-                </td>
-                <td>{c.lastSellPrice ? formatNumber(c.lastSellPrice) : "-"}</td>
-                <td>{c.buyTrigger > 0 ? c.buyTrigger : "-"}</td>
-                <td>{c.status === "pending-buy" ? "Achat" : "Vente"}</td>
-                <td className="relative">
-                  <span
-                    className="text-yellow-300 cursor-pointer"
-                    onClick={() =>
-                      setOpenMenu((prev) =>
-                        prev === c.symbol ? null : c.symbol
-                      )
-                    }
-                  >
-                    ⋯
-                  </span>
-                  {openMenu === c.symbol && (
-                    <div className="absolute right-0 mt-2 w-28 bg-background border border-white/20 rounded shadow z-10">
+                  ⋯
+                </span>
+                {openMenu === c.symbol && (
+                  <div className="absolute right-0 mt-2 w-[120px] bg-background border border-white/20 p-[10px] shadow z-10 rounded">
+                    <div
+                      className="px-3 py-2 hover:bg-white/10 cursor-pointer"
+                      onClick={async () => {
+                        try {
+                          const res = await fetch(
+                            `/api/trade/buy/${c.symbol}`,
+                            {
+                              method: "POST",
+                            }
+                          );
+                          const data = await res.json();
+                          if (!res.ok) {
+                            alert(data.error || "Erreur lors de l'achat.");
+                            return;
+                          }
+                          triggerSync();
+                          setOpenMenu(null);
+                        } finally {
+                          setOpenMenu(null);
+                        }
+                      }}
+                    >
+                      Acheter 10$
+                    </div>
+                    {c.totalHoldings > 1 && (
                       <div
-                        className="px-3 py-2 hover:bg-white/10 cursor-pointer"
+                        className={`px-3 py-2 ${
+                          c.status !== "pending-sell"
+                            ? "text-white/30 cursor-not-allowed"
+                            : "hover:bg-white/10 text-red-400 cursor-pointer"
+                        }`}
                         onClick={async () => {
+                          if (c.status !== "pending-sell") return;
+
                           try {
                             const res = await fetch(
-                              `/api/trade/buy/${c.symbol}`,
+                              `/api/trade/sell/${c.symbol}`,
                               {
                                 method: "POST",
                               }
                             );
                             const data = await res.json();
-
                             if (!res.ok) {
-                              alert(data.error || "Erreur lors de l'achat.");
+                              alert(data.error || "Erreur lors de la vente.");
                               return;
                             }
-
                             triggerSync();
                             setOpenMenu(null);
-                          } finally {
-                            setOpenMenu(null);
+                          } catch (_err) {
+                            alert("Erreur réseau.");
                           }
                         }}
                       >
-                        Acheter 10$
+                        Vendre
                       </div>
-                      {c.totalHoldings > 1 && (
-                        <div
-                          className={`px-3 py-2 cursor-pointer ${
-                            c.status !== "pending-sell"
-                              ? "text-white/30 cursor-not-allowed"
-                              : "hover:bg-white/10 text-red-400"
-                          }`}
-                          onClick={async () => {
-                            if (c.status !== "pending-sell") return;
-
-                            try {
-                              const res = await fetch(
-                                `/api/trade/sell/${c.symbol}`,
-                                {
-                                  method: "POST",
-                                }
-                              );
-                              const data = await res.json();
-
-                              if (!res.ok) {
-                                console.error("Erreur vente :", data);
-                                alert(data.error || "Erreur lors de la vente.");
-                                return;
-                              }
-                              triggerSync();
-                              setOpenMenu(null);
-                            } catch (_err) {
-                              console.error("Erreur fetch :", _err);
-                              alert("Erreur réseau.");
-                            }
-                          }}
-                        >
-                          Vendre
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="text-right pt-4 text-cyan cursor-pointer hover:brightness-125">
-          Voir tout
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
+      <div
+        onClick={() => router.push("/dashboard")}
+        className="text-right pt-[10px] text-cyan cursor-pointer hover:brightness-150 transition duration-200"
+      >
+        Voir tout
       </div>
     </BlockWrapper>
   );
 }
 
 function formatMoney(val: number) {
-  return `${val.toFixed(2)} $`;
+  return `${val.toFixed(1)} $`;
 }
 function formatPct(val: number) {
   const sign = val > 0 ? "+" : "";
   return `${sign}${val.toFixed(2)}%`;
 }
 function formatNumber(val: number) {
-  return val.toLocaleString();
+  return `${val.toFixed(0)} $`;
 }

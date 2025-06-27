@@ -53,17 +53,29 @@ export default function SoldeGlobal({
         </div>
 
         <div className="grid grid-cols-2">
-          <Card label="Pot actif" value={wallet.potOn} color="text-pink" />
-          <Card label="Pot inactif" value={wallet.potOff} color="text-purple" />
-          <Card label="Sécurité" value={wallet.security} color="text-cyan" />
-          <Card label="Cash" value={wallet.cash} color="text-gold" />
+          <Card
+            label="Pot actif"
+            value={wallet.potOn}
+            color="text-pink text-body"
+          />
+          <Card
+            label="Pot inactif"
+            value={wallet.potOff}
+            color="text-purple text-body"
+          />
+          <Card
+            label="Sécurité"
+            value={wallet.security}
+            color="text-cyan text-body"
+          />
+          <Card label="Cash" value={wallet.cash} color="text-gold text-body" />
         </div>
 
         <div className="text-right">
-          <div className="mt-[10px] w-auto">
+          <div className="w-auto">
             <div
               onClick={() => router.push("/dashboard")}
-              className="inline cursor-pointer text-cyan hover:brightness-150 transition duration-200"
+              className="inline cursor-pointer text-cyan hover:brightness-150 transition duration-200 pb-[10px]"
             >
               Voir tout
             </div>
@@ -84,7 +96,7 @@ function Card({
   color: string;
 }) {
   return (
-    <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[20px] w-[160px] box-border">
+    <div className="bg-background border-default rounded pl-[15px] pr-[15px] mb-[10px] w-[160px] box-border">
       <div className={`${color} pt-[18px]`}>{label}</div>{" "}
       <div className="text-monney font-bold pb-[20px]">${value.toFixed(2)}</div>
     </div>
