@@ -154,11 +154,13 @@ export default function CryptoTable({
           ))}
         </div>
       </div>
-      <div
-        onClick={() => router.push("/dashboard")}
-        className="text-right pt-[10px] text-cyan cursor-pointer hover:brightness-150 transition duration-200"
-      >
-        Voir tout
+      <div className="text-right pt-[10px]">
+        <span
+          onClick={() => router.push("/dashboard")}
+          className="text-cyan cursor-pointer hover:brightness-150 transition duration-200"
+        >
+          Voir tout
+        </span>
       </div>
     </BlockWrapper>
   );
