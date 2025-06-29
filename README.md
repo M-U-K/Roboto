@@ -19,7 +19,7 @@ Elle s’appuie sur un algorithme décisionnel basé sur l’analyse de tendance
 ## 🧱 Stack technique
 
 - **Next.js 14 (App Router)**
-- **Prisma ORM** (SQLite pour dev, PostgreSQL possible)
+- **Prisma ORM** (SQLite pour dev)
 - **TailwindCSS** + typographie `Orbitron` & `Manrope`
 - **API Binance (REST)** via `axios`
 - Composants modulaires (`CryptoGrid`, `WalletCard`, `BotStatusCard`, etc.)
