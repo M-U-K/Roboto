@@ -13,7 +13,7 @@ type Crypto = {
   currentPrice: number;
   lastBuyPrice: number;
   lastSellPrice: number | null;
-  sellAt: number | null;
+  sellAt: number;
   buyTrigger: number;
   status: string;
 };
@@ -53,8 +53,6 @@ export default function CryptoTable({
             <div>Valeur</div>
             <div>Pot</div>
             <div>Gain %</div>
-            <div>Actuel</div>
-            <div>Achat</div>
             <div>Vente</div>
             <div>Trigger</div>
             <div>État</div>
@@ -73,11 +71,7 @@ export default function CryptoTable({
               <div className={c.gainLossPct >= 0 ? "text-gain" : "text-loss"}>
                 {formatPct(c.gainLossPct)}
               </div>
-              <div>{formatNumber(c.currentPrice)}</div>
-              <div>
-                {c.lastBuyPrice > 0 ? formatNumber(c.lastBuyPrice) : "-"}
-              </div>
-              <div>{c.lastSellPrice ? formatNumber(c.lastSellPrice) : "-"}</div>
+              <div>{formatMoney(c.sellAt)}</div>
               <div>{c.buyTrigger > 0 ? c.buyTrigger : "-"}</div>
               <div>{c.status === "pending-buy" ? "Achat" : "Vente"}</div>
               <div className="relative">

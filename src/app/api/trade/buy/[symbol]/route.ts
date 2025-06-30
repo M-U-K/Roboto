@@ -18,7 +18,6 @@ function signQueryRSA(query: string) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function POST(_req: Request, context: any) {
   const symbol = context.params.symbol.toUpperCase();
-  const investment = 10;
 
   if (symbol === "USDC") {
     return NextResponse.json(
@@ -27,9 +26,38 @@ export async function POST(_req: Request, context: any) {
     );
   }
 
+  const crypto = await prisma.crypto.findUnique({ where: { symbol } });
+  const wallet = await prisma.wallet.findFirst();
+
+  if (!crypto || !wallet) {
+    return NextResponse.json(
+      { error: "Crypto ou Wallet introuvable" },
+      { status: 500 }
+    );
+  }
+  const target = crypto.pot;
+  const investment = parseFloat((target - crypto.totalHoldings).toFixed(5));
+  console.log("MONTANT INVESTIS =%d, %d", investment, crypto.totalHoldings);
+  if (investment <= 0) {
+    return NextResponse.json(
+      { error: "Rien à acheter, déjà à 10 USDC ou plus." },
+      { status: 400 }
+    );
+  }
+
+  if (investment < 1) {
+    return NextResponse.json(
+      {
+        error: `Montant trop faible pour Binance : ${investment.toFixed(
+          2
+        )} USDC`,
+      },
+      { status: 400 }
+    );
+  }
+
   const pair = `${symbol}USDC`;
   const timestamp = Date.now();
-
   const query = `symbol=${pair}&side=BUY&type=MARKET&quoteOrderQty=${investment}&timestamp=${timestamp}`;
   const signature = signQueryRSA(query);
   const url = `https://api.binance.com/api/v3/order?${query}&signature=${signature}`;
@@ -54,42 +82,29 @@ export async function POST(_req: Request, context: any) {
 
   const fills = order.fills || [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const totalQty = fills.reduce(
     (acc: number, f: any) => acc + parseFloat(f.qty),
     0
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const avgPrice =
     fills.reduce(
       (acc: number, f: any) => acc + parseFloat(f.price) * parseFloat(f.qty),
       0
     ) / totalQty;
 
-  const crypto = await prisma.crypto.findUnique({ where: { symbol } });
-  const wallet = await prisma.wallet.findFirst();
-
-  if (!crypto || !wallet) {
-    return NextResponse.json(
-      { error: "Crypto ou Wallet introuvable" },
-      { status: 500 }
-    );
-  }
-
   const valueBought = totalQty * avgPrice;
+  const newTotalHoldings = crypto.totalHoldings + valueBought;
 
   await prisma.crypto.update({
     where: { symbol },
     data: {
-      totalHoldings: crypto.totalHoldings + valueBought,
-      pot: valueBought + crypto.totalHoldings,
+      totalHoldings: newTotalHoldings,
+      pot: newTotalHoldings,
       lastBuyPrice: avgPrice,
+      currentPrice: avgPrice,
       status: "pending-sell",
-      sellAt:
-        valueBought +
-        crypto.totalHoldings +
-        (valueBought + crypto.totalHoldings) * 0.05,
+      sellAt: newTotalHoldings * 1.05,
     },
   });
 

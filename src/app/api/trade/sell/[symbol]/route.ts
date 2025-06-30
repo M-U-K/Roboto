@@ -112,6 +112,7 @@ export async function POST(_req: Request, context: any) {
   const reinvested = gain > 0 ? gain / 8 : 0;
   const secured = gain > 0 ? (gain * 6) / 8 : 0;
   const extracted = gain > 0 ? gain / 8 : 0;
+  const newPot = gain > 0 ? cryptoData.pot + reinvested : cryptoData.pot;
 
   const wallet = await prisma.wallet.findFirst();
   if (!wallet) {
@@ -152,7 +153,7 @@ export async function POST(_req: Request, context: any) {
     where: { symbol },
     data: {
       totalHoldings: 0,
-      pot: 0,
+      pot: newPot,
       sellAt: null,
       lastSellPrice: avgSellPrice,
       lastSellDate: new Date(),

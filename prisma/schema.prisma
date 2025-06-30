@@ -23,7 +23,7 @@ model Crypto {
   lastBuyPrice    Float //dernier prix d'achat en dollars
   currentPrice    Float //prix actuel en dollars
   pot             Float  @default(0) //prix en dollars du pot attribué a la crypto
-  sellAt          Float? //souvent prix en dollars du pot + 5%
+  sellAt          Float  @default(0) //souvent prix en dollars du pot + 5%
   gainLossPct     Float //état actuel de la crypto en comparant le current price et le last buy price
   lastUpdated     DateTime @updatedAt //date derniere update (toute les 5min j'actualise le currentPrice)
 
