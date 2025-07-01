@@ -47,11 +47,20 @@ export default function SoldeGlobal({
       containerRef={containerRef}
     >
       <div className="w-full max-w-sm text-foreground">
-        <div className="text-primary text-heading pt-[20px]">Solde Global</div>
-        <div className="text-monney pb-[10px]">
-          ${wallet.totalValue.toFixed(2)}
+        <div className="flex justify-between items-end pt-[20px]">
+          <div>
+            <div className="text-primary text-heading">Solde Global</div>
+            <div className="text-monney pb-[10px]">
+              ${wallet.totalValue.toFixed(2)}
+            </div>
+          </div>
+          <div className="">
+            <div className="text-gold text-body pb-[3px]">Banque</div>
+            <div className="text-monney pb-[10px]">
+              ${wallet.USDC.toFixed(2)}
+            </div>
+          </div>
         </div>
-
         <div className="grid grid-cols-2">
           <Card
             label="Pot actif"

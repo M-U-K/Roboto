@@ -154,7 +154,7 @@ export async function POST(_req: Request, context: any) {
     data: {
       totalHoldings: 0,
       pot: newPot,
-      sellAt: null,
+      sellAt: 0,
       lastSellPrice: avgSellPrice,
       lastSellDate: new Date(),
       status: "pending-buy",
