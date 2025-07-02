@@ -1,7 +1,7 @@
 # 🤖 Roboto — Trading Bot Automatisé sur Binance
 
 Roboto est une application fullstack conçue pour **automatiser l’achat et la revente de cryptomonnaies** via l’API Binance.  
-Elle s’appuie sur un algorithme décisionnel basé sur l’analyse de tendance et la volatilité du marché, et fournit un **dashboard synthwave élégant** pour suivre les performances en temps ré el.
+Elle s’appuie sur un algorithme décisionnel basé sur l’analyse de tendance et la volatilité du marché, et fournit un **dashboard synthwave élégant** pour suivre les performances en temps réel.
 
 ---
 
