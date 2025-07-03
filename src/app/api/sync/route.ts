@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { updateActiveCryptosFromWallet } from "../../../lib/updateFromBinance";
 import { syncCrypto } from "../../../lib/syncCrypto";
+import { checkAutoSell } from "@/lib/checkAutoSell";
 import { prisma } from "@/lib/prisma";
 import fs from "fs";
 import path from "path";
@@ -12,6 +13,7 @@ export async function GET() {
 
     for (const symbol of active) {
       await syncCrypto(symbol);
+      await checkAutoSell(symbol);
     }
     const timestamp = Date.now();
     const query = `timestamp=${timestamp}`;

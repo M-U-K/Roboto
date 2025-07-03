@@ -35,8 +35,7 @@ export async function POST(_req: Request, context: any) {
       { status: 500 }
     );
   }
-  const target = crypto.pot;
-  const investment = parseFloat((target - crypto.totalHoldings).toFixed(5));
+  const investment = crypto.pot;
   console.log("MONTANT INVESTIS =%d, %d", investment, crypto.totalHoldings);
   if (investment <= 0) {
     return NextResponse.json(
@@ -100,7 +99,6 @@ export async function POST(_req: Request, context: any) {
     where: { symbol },
     data: {
       totalHoldings: newTotalHoldings,
-      pot: newTotalHoldings,
       lastBuyPrice: avgPrice,
       currentPrice: avgPrice,
       status: "pending-sell",

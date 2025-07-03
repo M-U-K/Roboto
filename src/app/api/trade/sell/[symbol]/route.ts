@@ -158,6 +158,7 @@ export async function POST(_req: Request, context: any) {
       lastSellPrice: avgSellPrice,
       lastSellDate: new Date(),
       status: "pending-buy",
+      gainLossPct: 0,
     },
   });
 
