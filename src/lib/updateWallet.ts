@@ -18,6 +18,9 @@ export async function updateWallet() {
   const wallet = await prisma.wallet.findFirst();
 
   if (wallet) {
+    const { cash } = wallet;
+    const security = usdc - (potOff + cash);
+
     const updated = await prisma.wallet.update({
       where: { id: wallet.id },
       data: {
@@ -25,20 +28,26 @@ export async function updateWallet() {
         potOn,
         potOff,
         USDC: usdc,
+        security,
       },
     });
+
     return updated;
   } else {
+    const cash = 0;
+    const security = usdc - potOff;
+
     const created = await prisma.wallet.create({
       data: {
         totalValue,
         potOn,
         potOff,
-        cash: 0,
-        security: 0,
+        cash,
+        security,
         USDC: usdc,
       },
     });
+
     return created;
   }
 }

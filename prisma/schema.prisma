@@ -31,8 +31,21 @@ model Crypto {
   lastSellPrice   Float? //prix de la derniere vente en dollars
 
   buyTrigger      Int       @default(0) // Score d’achat dynamique //quand acheter (faudra revoir le truc)
+  triggerScore    Int       @default(0) // score qui monte ou descend
+
+  volatility      Int       @default(1)
   status          String    @default("pending-buy") // "pending-buy" ou "pending-sell" //état de la crypto si elle est en attente de vente ou d'achat
   trades          TradeEntry[] //ca table de transaction attitré
+}
+
+model TriggerLog {
+  id          String   @id @default(uuid()) //id de la crypto
+  symbol      String
+  change      Int
+  newScore    Int
+  createdAt   DateTime @default(now())
+
+  @@index([symbol])
 }
 
 model TradeEntry {
