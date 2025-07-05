@@ -1,8 +1,6 @@
-// lib/getTriggerInfo.ts
 import { prisma } from "@/lib/service/private/core/prisma";
 
 export async function getTriggerInfo() {
-  // On ignore USDC
   const cryptos = await prisma.crypto.findMany({
     where: {
       symbol: {
@@ -27,7 +25,7 @@ export async function getTriggerInfo() {
     (cryptos.length || 1);
 
   const log = await prisma.triggerLog.findMany({
-    take: 15,
+    take: 5,
     orderBy: { createdAt: "desc" },
     where: {
       symbol: {
@@ -41,13 +39,11 @@ export async function getTriggerInfo() {
     },
   });
 
-  const formattedLog = log
-    .slice(0, 5) // Prend les 5 premiers éléments du log (les plus récents)
-    .map((entry) => ({
-      symbol: entry.symbol,
-      delta: entry.change,
-      newScore: entry.newScore,
-    }));
+  const formattedLog = log.map((entry) => ({
+    symbol: entry.symbol,
+    delta: entry.change,
+    newScore: entry.newScore,
+  }));
 
   return {
     volatility: Math.round(volatility),

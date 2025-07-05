@@ -25,7 +25,7 @@ export default function SoldeGlobal({
   useEffect(() => {
     const fetchWallet = async () => {
       try {
-        const res = await fetch("/api/wallet");
+        const res = await fetch("/api/public/wallet");
         const data = await res.json();
         setWallet(data);
       } catch (error) {

@@ -6,7 +6,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   const dummy = {
     lastSync: null,
     syncing: false,
-    triggerSync: async () => {},
+    activateSync: async () => {},
   };
 
   return <SyncContext.Provider value={dummy}>{children}</SyncContext.Provider>;

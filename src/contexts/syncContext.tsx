@@ -3,13 +3,13 @@ import { createContext, useContext } from "react";
 type SyncContextType = {
   lastSync: number | null;
   syncing: boolean;
-  triggerSync: () => Promise<void>;
+  activateSync: () => Promise<void>;
 };
 
 export const SyncContext = createContext<SyncContextType>({
   lastSync: null,
   syncing: false,
-  triggerSync: async () => {},
+  activateSync: async () => {},
 });
 
 export const useSync = () => useContext(SyncContext);

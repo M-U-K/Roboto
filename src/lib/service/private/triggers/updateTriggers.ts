@@ -2,7 +2,7 @@ import { prisma } from "@/lib/service/private/core/prisma";
 import { calculateTriggerScore } from "@/lib/service/private/triggers/calculateTriggerScore";
 import { adjustBuyTrigger } from "@/lib/service/private/triggers/adjustBuyTrigger";
 import { getKlines } from "@/lib/binance/public/klines";
-import { logTriggerChange } from "@/lib/service/public/createTriggerLog";
+import { logTriggerChange } from "@/lib/service/public/log/createTriggerLog";
 
 export async function updateTriggers() {
   const inactiveCryptos = await prisma.crypto.findMany({

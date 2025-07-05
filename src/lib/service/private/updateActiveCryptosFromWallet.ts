@@ -1,7 +1,7 @@
-// lib/updateActiveCryptosFromWallet.ts
 import { prisma } from "@/lib/service/private/core/prisma";
 import { getWalletBalances } from "@/lib/binance/private/account";
 import { getCurrentPrice } from "@/lib/binance/public/ticker";
+import { createCrypto } from "@/lib/service/private/create/createCrypto";
 
 export async function updateActiveCryptosFromWallet() {
   const activeCryptos = await getWalletBalances();
@@ -21,17 +21,7 @@ export async function updateActiveCryptosFromWallet() {
     const exists = await prisma.crypto.findUnique({ where: { symbol } });
 
     if (!exists) {
-      await prisma.crypto.create({
-        data: {
-          symbol,
-          totalHoldings: totalValue,
-          lastBuyPrice: currentPrice,
-          currentPrice,
-          gainLossPct: 0,
-          buyTrigger: 0,
-          status: "pending-buy",
-        },
-      });
+      await createCrypto(symbol, currentPrice, totalValue);
       console.log(`🆕 Crypto ajoutée : ${symbol}`);
     } else {
       console.log(`🔁 Crypto déjà en base : ${symbol}`);

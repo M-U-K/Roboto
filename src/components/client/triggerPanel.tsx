@@ -28,7 +28,7 @@ export default function TriggerPanel({
   useEffect(() => {
     const fetchTrigger = async () => {
       try {
-        const res = await fetch("/api/trigger");
+        const res = await fetch("/api/public/trigger");
         const data = await res.json();
         setTrigger(data);
       } catch (error) {

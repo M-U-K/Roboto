@@ -28,10 +28,10 @@ export default function CryptoTable({
 
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const { lastSync, triggerSync } = useSync();
+  const { lastSync, activateSync } = useSync();
 
   useEffect(() => {
-    fetch("/api/crypto")
+    fetch("/api/public/crypto")
       .then((res) => res.json())
       .then((data) => setCryptos(data));
   }, [lastSync]);
@@ -103,7 +103,7 @@ export default function CryptoTable({
                             alert(data.error || "Erreur lors de l'achat.");
                             return;
                           }
-                          triggerSync();
+                          activateSync();
                           setOpenMenu(null);
                         } finally {
                           setOpenMenu(null);
@@ -134,7 +134,7 @@ export default function CryptoTable({
                               alert(data.error || "Erreur lors de la vente.");
                               return;
                             }
-                            triggerSync();
+                            activateSync();
                             setOpenMenu(null);
                           } catch (_err) {
                             alert("Erreur réseau.");

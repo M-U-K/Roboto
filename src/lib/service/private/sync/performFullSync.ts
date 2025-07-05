@@ -1,5 +1,5 @@
-import { updateActiveCryptosFromWallet } from "@/lib/service/private/update/updateFromBinance";
-import { syncCrypto } from "@/lib/service/private/binance/syncCrypto";
+import { updateActiveCryptosFromWallet } from "@/lib/service/private/updateActiveCryptosFromWallet";
+import { syncCrypto } from "@/lib/service/private/syncCrypto";
 import { checkAutoSell } from "@/lib/service/private/crypto/checkAutoSell";
 import { prisma } from "@/lib/service/private/core/prisma";
 import { getWalletBalances } from "@/lib/binance/private/account";

@@ -27,7 +27,7 @@ export default function EtatSysteme({
 
   useEffect(() => {
     const fetchState = async () => {
-      const res = await fetch("/api/state");
+      const res = await fetch("/api/public/state");
       const data = await res.json();
       setState(data);
     };
