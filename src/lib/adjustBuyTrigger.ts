@@ -2,7 +2,6 @@
 import { prisma } from "@/lib/prisma";
 
 export async function adjustBuyTrigger(symbol: string, klines: any[]) {
-  // On calcule la volatilité moyenne sur 30 jours : (high - low) / close
   const volatilities = klines.map((k: any) => {
     const high = parseFloat(k[2]);
     const low = parseFloat(k[3]);
@@ -13,7 +12,6 @@ export async function adjustBuyTrigger(symbol: string, klines: any[]) {
   const avgVolatility =
     volatilities.reduce((a, b) => a + b, 0) / volatilities.length;
 
-  // Palier de volatilité (tu peux ajuster les seuils si besoin)
   let palier = 1;
   if (avgVolatility < 0.01) palier = 5;
   else if (avgVolatility < 0.015) palier = 4;
@@ -34,7 +32,7 @@ export async function adjustBuyTrigger(symbol: string, klines: any[]) {
     where: { symbol },
     data: {
       buyTrigger: buyTriggers[palier],
-      volatility: palier, // 👈 correspond bien au "niveau de volatilité"
+      volatility: palier,
     },
   });
 }

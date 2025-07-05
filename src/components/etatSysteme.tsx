@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
-import { useSync } from "@/context/syncContext";
+import { useSync } from "@/contexts/syncContext";
 import { History } from "lucide-react";
 import { useRouter } from "next/navigation";
 

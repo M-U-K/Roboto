@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { updateActiveCryptosFromWallet } from "../../../lib/updateFromBinance";
 import { syncCrypto } from "../../../lib/syncCrypto";
 import { checkAutoSell } from "@/lib/checkAutoSell";
-import { updateTriggers } from "@/lib/updateTriggers";
 
 import { prisma } from "@/lib/prisma";
 import fs from "fs";
@@ -17,7 +16,7 @@ export async function GET() {
       await syncCrypto(symbol);
       await checkAutoSell(symbol);
     }
-    await updateTriggers();
+
     const timestamp = Date.now();
     const query = `timestamp=${timestamp}`;
     const privateKeyPath = process.env.BINANCE_RSA_PRIVATE_PATH!;

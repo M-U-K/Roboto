@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Manrope, Orbitron } from "next/font/google";
-import { SyncProvider } from "@/context/syncContext";
+import { SyncProvider } from "@/providers/syncProvider";
 
 export const metadata = {
   title: "Roboto",

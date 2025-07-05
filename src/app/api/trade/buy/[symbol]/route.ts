@@ -101,6 +101,8 @@ export async function POST(_req: Request, context: any) {
       totalHoldings: newTotalHoldings,
       lastBuyPrice: avgPrice,
       currentPrice: avgPrice,
+      triggerScore: 0,
+      buyTrigger: 0,
       status: "pending-sell",
       sellAt: newTotalHoldings * 1.05,
     },

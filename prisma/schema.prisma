@@ -48,6 +48,12 @@ model TriggerLog {
   @@index([symbol])
 }
 
+model DailyTriggerUpdateLog {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  createdAt DateTime @default(now())
+}
+
 model TradeEntry {
   id           String   @id @default(uuid())
   cryptoId     String //le nom de la crypto je crois ou de la table crypto aligné

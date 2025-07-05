@@ -29,13 +29,10 @@ export async function updateTriggers() {
         data: { triggerScore: newScore },
       });
 
-      if (newScore >= crypto.buyTrigger) {
-        await fetch(
-          `${process.env.BASE_URL_URL}/api/trade/buy/${crypto.symbol}`,
-          {
-            method: "POST",
-          }
-        );
+      if (newScore >= crypto.buyTrigger && crypto.buyTrigger > 0) {
+        await fetch(`${process.env.BASE_URL}/api/trade/buy/${crypto.symbol}`, {
+          method: "POST",
+        });
       }
     } catch (err) {
       console.error(`Erreur trigger ${crypto.symbol}`, err);

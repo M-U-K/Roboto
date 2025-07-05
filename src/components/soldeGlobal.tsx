@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
 import { useRouter } from "next/navigation";
-import { useSync } from "@/context/syncContext";
+import { useSync } from "@/contexts/syncContext";
 
 type Wallet = {
   totalValue: number;

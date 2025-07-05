@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
 import { useRouter } from "next/navigation";
-import { useSync } from "@/context/syncContext";
+import { useSync } from "@/contexts/syncContext";
 
 type TriggerLog = {
   symbol: string;
@@ -12,7 +12,6 @@ type TriggerLog = {
 
 type TriggerData = {
   volatility: number;
-  avgScore: number;
   highCount: number;
   log: TriggerLog[];
 };
@@ -29,7 +28,7 @@ export default function TriggerPanel({
   useEffect(() => {
     const fetchTrigger = async () => {
       try {
-        const res = await fetch("/api/trigger/summary");
+        const res = await fetch("/api/trigger");
         const data = await res.json();
         setTrigger(data);
       } catch (error) {
@@ -55,7 +54,6 @@ export default function TriggerPanel({
           <div>
             <div className="text-fuchsia-400 text-heading">Trigger</div>
             <div className="text-monney text-cyan-300 text-4xl font-bold">
-              {trigger.avgScore.toFixed(1)}{" "}
               <span className="text-xl font-medium">/ 6</span>
             </div>
           </div>
