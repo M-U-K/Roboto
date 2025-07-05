@@ -1,18 +1,15 @@
 import { createContext, useContext } from "react";
 
-export type SyncContextType = {
-  lastSync: number;
+type SyncContextType = {
+  lastSync: number | null;
   syncing: boolean;
   triggerSync: () => Promise<void>;
 };
 
-export const SyncContext = createContext<SyncContextType | undefined>(
-  undefined
-);
+export const SyncContext = createContext<SyncContextType>({
+  lastSync: null,
+  syncing: false,
+  triggerSync: async () => {},
+});
 
-export function useSync() {
-  const context = useContext(SyncContext);
-  if (!context)
-    throw new Error("useSync doit être utilisé dans un SyncProvider");
-  return context;
-}
+export const useSync = () => useContext(SyncContext);

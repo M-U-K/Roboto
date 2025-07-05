@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import SoldeGlobal from "../components/soldeGlobal";
-import EtatSysteme from "@/components/etatSysteme";
-import CryptoTable from "@/components/listeCryptos";
-import TriggerPanel from "@/components/triggerPanel";
+import SoldeGlobal from "../components/client/soldeGlobal";
+import EtatSysteme from "@/components/client/etatSysteme";
+import CryptoTable from "@/components/client/listeCryptos";
+import TriggerPanel from "@/components/client/triggerPanel";
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);

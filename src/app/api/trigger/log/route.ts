@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/service/private/core/prisma";
 
 export async function GET() {
   const today = new Date().toISOString().slice(0, 10);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { updateTriggers } from "@/lib/updateTriggers";
+import { updateTriggers } from "@/lib/service/private/triggers/updateTriggers";
 
 export async function POST() {
   try {

@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { updateState } from "@/lib/updateState";
+import { prisma } from "@/lib/service/private/core/prisma";
+import { updateState } from "@/lib/service/private/update/updateState";
 
 export async function GET() {
   try {
-    let state = await prisma.state.findUnique({ where: { id: 1 } });
-
-    if (!state) {
-      await updateState();
-      state = await prisma.state.findUnique({ where: { id: 1 } });
-    }
+    let state =
+      (await prisma.state.findUnique({ where: { id: 1 } })) ??
+      (await updateState(),
+      await prisma.state.findUnique({ where: { id: 1 } }));
 
     if (!state) {
       return NextResponse.json(

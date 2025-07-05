@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTriggerInfo } from "@/lib/getTriggerInfo";
+import { getTriggerInfo } from "@/lib/service/public/getTriggerInfo";
 
 export async function GET() {
   try {
