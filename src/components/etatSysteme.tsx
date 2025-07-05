@@ -96,6 +96,7 @@ export default function EtatSysteme({
           />
           <Card label="Gain total" value={state?.totalGain} isDollar />
         </div>
+        {/*
         <div className="text-right pt-[10px]">
           <span
             onClick={() => router.push("/dashboard")}
@@ -104,6 +105,7 @@ export default function EtatSysteme({
             Voir tout
           </span>
         </div>
+        */}
       </div>
     </BlockWrapper>
   );

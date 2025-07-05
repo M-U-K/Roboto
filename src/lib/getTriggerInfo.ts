@@ -41,11 +41,13 @@ export async function getTriggerInfo() {
     },
   });
 
-  const formattedLog = log.map((entry) => ({
-    symbol: entry.symbol,
-    delta: entry.change,
-    newScore: entry.newScore,
-  }));
+  const formattedLog = log
+    .slice(0, 5) // Prend les 5 premiers éléments du log (les plus récents)
+    .map((entry) => ({
+      symbol: entry.symbol,
+      delta: entry.change,
+      newScore: entry.newScore,
+    }));
 
   return {
     volatility: Math.round(volatility),

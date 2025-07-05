@@ -151,6 +151,7 @@ export default function CryptoTable({
           ))}
         </div>
       </div>
+      {/*
       <div className="text-right pt-[10px]">
         <span
           onClick={() => router.push("/dashboard")}
@@ -159,6 +160,7 @@ export default function CryptoTable({
           Voir tout
         </span>
       </div>
+      */}
     </BlockWrapper>
   );
 }

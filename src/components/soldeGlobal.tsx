@@ -82,12 +82,14 @@ export default function SoldeGlobal({
 
         <div className="text-right">
           <div className="w-auto">
+            {/*
             <div
               onClick={() => router.push("/dashboard")}
               className="inline cursor-pointer text-cyan hover:brightness-150 transition duration-200 pb-[10px]"
             >
               Voir tout
             </div>
+            */}
           </div>
         </div>
       </div>

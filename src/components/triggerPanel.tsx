@@ -50,47 +50,52 @@ export default function TriggerPanel({
       containerRef={containerRef}
     >
       <div className="w-full max-w-sm text-foreground">
-        <div className="flex justify-between items-end pt-[20px]">
+        <div className="flex justify-between items-end mt-[20px] mb-[20px]">
           <div>
-            <div className="text-fuchsia-400 text-heading">Trigger</div>
-            <div className="text-monney text-cyan-300 text-4xl font-bold">
-              <span className="text-xl font-medium">/ 6</span>
-            </div>
+            <div className="text-primary text-heading">Trigger</div>
           </div>
-          <div>
-            <div className="text-gold text-body pb-[3px]">Volatilité</div>
-            <div className="text-monney pb-[10px]">{trigger.volatility}</div>
+          <div
+            className="text-[24px] text-gold font-semibold px-[15px] py-[6px] rounded-[25px] border-[1px] 
+  border-gold bg-transparent inline-block 
+  shadow-[0_0_8px_#faff56] [filter:drop-shadow(0_0_1px_#faff56)] 
+  [text-shadow:0_0_1px_#faff56]"
+          >
+            Volatilité à {trigger.volatility}
           </div>
         </div>
 
-        <div className="text-sm text-pink-100 pb-[10px]">
-          {trigger.highCount} cryptos à ≥ 5
+        <div className="text-heading text-cyan pb-[10px] text-center w-full mb-[20px]">
+          {trigger.highCount} cryptos à BuyT - 1
         </div>
 
-        <div className="border border-pink-400 rounded-lg p-3 mb-[10px]">
-          <div className="text-pink-400 font-bold text-sm mb-2">Log</div>
+        <div className="bg-background border-default rounded box-border pl-[20px] mb-[10px]">
+          <div className="text-pink text-heading mb-[10px]">Log</div>
           {trigger.log.map((entry, i) => (
-            <div key={i} className="text-sm text-white">
+            <div key={i} className="text-body mb-[8px]">
               - {entry.symbol}{" "}
-              <span
-                className={entry.delta >= 0 ? "text-green-400" : "text-red-400"}
-              >
+              <span className={entry.delta >= 0 ? "text-gain" : "text-loss"}>
                 {entry.delta >= 0 ? "+" : ""}
                 {entry.delta}
               </span>
-              , maintenant à {entry.newScore}
+              , maintenant à
+              <span className={entry.newScore >= 0 ? "text-gain" : "text-loss"}>
+                {" "}
+                {entry.newScore >= 0 ? "+" : ""} {entry.newScore}
+              </span>
             </div>
           ))}
         </div>
 
         <div className="text-right">
           <div className="w-auto">
-            <div
-              onClick={() => router.push("/dashboard")}
-              className="inline cursor-pointer text-cyan hover:brightness-150 transition duration-200 pb-[10px]"
-            >
-              Voir tout
-            </div>
+            {/*
+  <div
+    onClick={() => router.push("/dashboard")}
+    className="inline cursor-pointer text-cyan hover:brightness-150 transition duration-200 pb-[10px]"
+  >
+    Voir tout
+  </div>
+*/}
           </div>
         </div>
       </div>
