@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/service/private/core/prisma";
 import { getKlines } from "@/lib/binance/public/klines";
-import { adjustBuyTrigger } from "@/lib/service/private/triggers/adjustBuyTrigger";
+import { adjustBuyTrigger } from "@/lib/service/private/adjustBuyTrigger";
 
 async function getUSDCConvertibleSymbols(): Promise<string[]> {
   const res = await fetch("https://api.binance.com/api/v3/exchangeInfo");

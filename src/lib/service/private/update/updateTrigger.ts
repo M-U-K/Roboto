@@ -1,41 +1,38 @@
 import { prisma } from "@/lib/service/private/core/prisma";
-import { calculateTriggerScore } from "@/lib/service/private/triggers/calculateTriggerScore";
-import { adjustBuyTrigger } from "@/lib/service/private/triggers/adjustBuyTrigger";
 import { getKlines } from "@/lib/binance/public/klines";
+import { adjustBuyTrigger } from "@/lib/service/private/adjustBuyTrigger";
+import { calculateTriggerScore } from "@/lib/service/private/calculateTriggerScore";
 import { logTriggerChange } from "@/lib/service/public/log/createTriggerLog";
 
 export async function updateTriggers() {
-  const inactiveCryptos = await prisma.crypto.findMany({
+  console.log("📡 Mise à jour des triggers en cours...");
+
+  const cryptos = await prisma.crypto.findMany({
     where: {
       status: "pending-buy",
       NOT: { symbol: "USDC" },
     },
   });
 
-  for (const crypto of inactiveCryptos) {
+  for (const crypto of cryptos) {
     try {
       const klines = await getKlines(crypto.symbol);
 
+      // ⚙️ Étape 1 : ajustement du seuil d'achat
       await adjustBuyTrigger(crypto.symbol, klines);
+
+      // ⚙️ Étape 2 : calcul du triggerScore
       const oldScore = crypto.triggerScore;
       const newScore = await calculateTriggerScore(crypto.symbol, klines);
 
+      // 📝 Étape 3 : log si changement de score
       if (oldScore !== newScore) {
         await logTriggerChange(crypto.symbol, oldScore, newScore);
       }
-
-      await prisma.crypto.update({
-        where: { symbol: crypto.symbol },
-        data: { triggerScore: newScore },
-      });
-
-      if (newScore >= crypto.buyTrigger && crypto.buyTrigger > 0) {
-        await fetch(`${process.env.BASE_URL}/api/trade/buy/${crypto.symbol}`, {
-          method: "POST",
-        });
-      }
     } catch (err) {
-      console.error(`Erreur trigger ${crypto.symbol}`, err);
+      console.error(`❌ Erreur lors du trigger de ${crypto.symbol}`, err);
     }
   }
+
+  console.log("✅ updateTriggers() terminé.\n");
 }

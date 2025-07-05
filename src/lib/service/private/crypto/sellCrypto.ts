@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/service/private/core/prisma";
 import { getKlines } from "@/lib/binance/public/klines";
-import { adjustBuyTrigger } from "../triggers/adjustBuyTrigger";
+import { adjustBuyTrigger } from "../adjustBuyTrigger";
 import {
   placeMarketSellOrder,
   getLotSizeInfo,
@@ -114,5 +114,3 @@ export async function sellCrypto(symbol: string) {
     extracted,
   };
 }
-
-// ----------- Utils -----------
