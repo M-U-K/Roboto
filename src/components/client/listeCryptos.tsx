@@ -25,16 +25,21 @@ export default function CryptoTable({
   containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const router = useRouter();
+  const { activateSync, syncCount } = useSync(); // 🔄
 
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const { lastSync, activateSync } = useSync();
 
+  // Chargement des données à chaque sync
   useEffect(() => {
-    fetch("/api/public/crypto")
-      .then((res) => res.json())
-      .then((data) => setCryptos(data));
-  }, [lastSync]);
+    const fetchCryptos = async () => {
+      const res = await fetch("/api/public/crypto");
+      const data = await res.json();
+      setCryptos(data);
+    };
+
+    fetchCryptos();
+  }, [syncCount]);
 
   return (
     <BlockWrapper
@@ -42,7 +47,7 @@ export default function CryptoTable({
       defaultPosition={{ x: 860, y: 20 }}
       size={{ width: 950, height: 350 }}
     >
-      <div className="text-heading text-primary  pt-[20px]">
+      <div className="text-heading text-primary pt-[20px]">
         Liste des cryptomonnaies
       </div>
 
@@ -74,7 +79,7 @@ export default function CryptoTable({
               <div className={c.gainLossPct >= 0 ? "text-gain" : "text-loss"}>
                 {formatPct(c.gainLossPct)}
               </div>
-              <div>{c.triggerScore != 0 ? c.triggerScore : "-"}</div>
+              <div>{c.triggerScore !== 0 ? c.triggerScore : "-"}</div>
               <div>{c.buyTrigger > 0 ? c.buyTrigger : "-"}</div>
               <div>{c.status === "pending-buy" ? "Achat" : "Vente"}</div>
               <div className="relative">
@@ -151,16 +156,6 @@ export default function CryptoTable({
           ))}
         </div>
       </div>
-      {/*
-      <div className="text-right pt-[10px]">
-        <span
-          onClick={() => router.push("/dashboard")}
-          className="text-cyan cursor-pointer hover:brightness-150 transition duration-200"
-        >
-          Voir tout
-        </span>
-      </div>
-      */}
     </BlockWrapper>
   );
 }
@@ -171,7 +166,4 @@ function formatMoney(val: number) {
 function formatPct(val: number) {
   const sign = val > 0 ? "+" : "";
   return `${sign}${val.toFixed(2)}%`;
-}
-function formatNumber(val: number) {
-  return `${val.toFixed(0)} $`;
 }

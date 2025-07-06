@@ -103,6 +103,16 @@ export async function sellCrypto(symbol: string) {
     },
   });
 
+  const state = await prisma.state.findFirst();
+  if (!state) throw new Error("State introuvable");
+
+  await prisma.state.update({
+    where: { id: state.id },
+    data: {
+      totalGain: state.totalGain + extracted,
+    },
+  });
+
   return {
     success: true,
     symbol,

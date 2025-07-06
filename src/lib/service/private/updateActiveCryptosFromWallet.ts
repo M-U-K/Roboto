@@ -8,6 +8,9 @@ export async function updateActiveCryptosFromWallet() {
   const kept: string[] = [];
 
   for (const { symbol, amount } of activeCryptos) {
+    // 🪙 Skip USDC → il est géré en bas
+    if (symbol === "USDC") continue;
+
     const currentPrice = await getCurrentPrice(`${symbol}USDC`);
     if (!currentPrice) continue;
 
@@ -18,16 +21,42 @@ export async function updateActiveCryptosFromWallet() {
       continue;
     }
 
-    const exists = await prisma.crypto.findUnique({ where: { symbol } });
+    const existing = await prisma.crypto.findUnique({ where: { symbol } });
 
-    if (!exists) {
+    if (!existing) {
       await createCrypto(symbol, currentPrice, totalValue);
       console.log(`🆕 Crypto ajoutée : ${symbol}`);
     } else {
-      console.log(`🔁 Crypto déjà en base : ${symbol}`);
+      await prisma.crypto.update({
+        where: { symbol },
+        data: {
+          currentPrice,
+          totalHoldings: totalValue,
+        },
+      });
+      console.log(`🔄 Crypto mise à jour : ${symbol}`);
     }
 
     kept.push(symbol);
+  }
+
+  // 💰 Met à jour la valeur USDC dans le wallet
+  const usdc = activeCryptos.find((c) => c.symbol === "USDC");
+  if (usdc) {
+    const existingUSDC = await prisma.crypto.findUnique({
+      where: { symbol: "USDC" },
+    });
+
+    if (existingUSDC) {
+      await prisma.crypto.update({
+        where: { symbol: "USDC" },
+        data: {
+          currentPrice: 1,
+          totalHoldings: usdc.amount,
+        },
+      });
+    }
+    console.log(`💰 USDC mis à jour dans wallet : ${usdc.amount}`);
   }
 
   return kept;

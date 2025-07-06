@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import BlockWrapper from "./blockWrapper";
-import { useSync } from "@/contexts/syncContext";
 import { History } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSync } from "@/contexts/syncContext";
 
 type State = {
   isActive: number;
@@ -21,10 +21,10 @@ export default function EtatSysteme({
   const router = useRouter();
 
   const [state, setState] = useState<State | null>(null);
-  const [timeLeft, setTimeLeft] = useState("05:00");
-
-  const { lastSync, syncing } = useSync();
-
+  const [lastSync, setLastSync] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState("XX:XX");
+  const { activateSync, syncCount } = useSync(); // 🔄 syncCount déclenche les maj
+  // ⏳ Récupération de l'état global (cryptos)
   useEffect(() => {
     const fetchState = async () => {
       const res = await fetch("/api/public/state");
@@ -33,11 +33,25 @@ export default function EtatSysteme({
     };
 
     fetchState();
-  }, [lastSync]);
+  }, [syncCount]);
 
+  // ⏱️ Récupération du lastExecution depuis la route API /api/cron
   useEffect(() => {
+    const fetchLastSync = async () => {
+      const res = await fetch("/api/public/cron");
+      const data = await res.json();
+      setLastSync(new Date(data.lastExecution).getTime());
+    };
+
+    fetchLastSync();
+  }, [syncCount]);
+
+  // ⌛ Timer en direct basé sur lastSync + Déclenchement automatique de sync à 00:00
+  useEffect(() => {
+    if (!lastSync) return;
+
     const interval = setInterval(() => {
-      const delta = 300_000 - (Date.now() - lastSync);
+      const delta = 300_000 - (Date.now() - lastSync); // 5 min en ms
       const remaining = Math.max(0, delta);
       const minutes = Math.floor(remaining / 60000)
         .toString()
@@ -45,11 +59,23 @@ export default function EtatSysteme({
       const seconds = Math.floor((remaining % 60000) / 1000)
         .toString()
         .padStart(2, "0");
-      setTimeLeft(`${minutes}:${seconds}`);
+
+      const formattedTime = `${minutes}:${seconds}`;
+      setTimeLeft(formattedTime);
+
+      if (formattedTime === "00:00") {
+        (async () => {
+          try {
+            await activateSync();
+          } catch (error) {
+            console.error("Erreur lors de la sync automatique :", error);
+          }
+        })();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [lastSync]);
+  }, [lastSync, activateSync]);
 
   return (
     <BlockWrapper
@@ -59,10 +85,7 @@ export default function EtatSysteme({
     >
       <div className="w-full max-w-sm text-foreground">
         <div className="flex items-center w-full pt-[20px] pb-[10px]">
-          <div
-            className="text-primary text-heading whitespace-nowrap
-"
-          >
+          <div className="text-primary text-heading whitespace-nowrap">
             État du système
           </div>
 
@@ -82,9 +105,10 @@ export default function EtatSysteme({
               Chargement...
             </div>
           )}
+
           <div className="bg-background border-default rounded ml-[20px] box-border flex items-center gap-[8px] text-heading text-primary pl-[10px] pr-[10px]">
             <History className="text-gold" size={34} />
-            {syncing ? "XX:XX" : `${timeLeft}`}
+            {lastSync ? timeLeft : "XX:XX"}
           </div>
         </div>
 
@@ -96,16 +120,6 @@ export default function EtatSysteme({
           />
           <Card label="Gain total" value={state?.totalGain} isDollar />
         </div>
-        {/*
-        <div className="text-right pt-[10px]">
-          <span
-            onClick={() => router.push("/dashboard")}
-            className="text-cyan cursor-pointer hover:brightness-150 transition duration-200"
-          >
-            Voir tout
-          </span>
-        </div>
-        */}
       </div>
     </BlockWrapper>
   );

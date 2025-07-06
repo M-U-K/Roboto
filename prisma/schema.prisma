@@ -16,6 +16,11 @@ model Transaction {
   createdAt    DateTime @default(now())
 }
 
+model SyncCron {
+  name          String   @id        // ex: "syncCrypto"
+  lastExecution DateTime
+}
+
 model Crypto {
   id              String   @id @default(uuid()) //id de la crypto
   symbol          String   @unique //symbol genre BTC

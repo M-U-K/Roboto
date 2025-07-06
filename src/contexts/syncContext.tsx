@@ -1,15 +1,15 @@
+"use client";
+
 import { createContext, useContext } from "react";
 
 type SyncContextType = {
-  lastSync: number | null;
-  syncing: boolean;
   activateSync: () => Promise<void>;
+  syncCount: number;
 };
 
 export const SyncContext = createContext<SyncContextType>({
-  lastSync: null,
-  syncing: false,
   activateSync: async () => {},
+  syncCount: 0,
 });
 
 export const useSync = () => useContext(SyncContext);

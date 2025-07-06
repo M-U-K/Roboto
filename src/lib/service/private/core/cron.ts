@@ -1,7 +1,7 @@
 import { updateCrypto } from "@/lib/service/private/update/updateCrypto";
 import { updateWallet } from "@/lib/service/private/update/updateWallet";
 import { updateState } from "@/lib/service/private/update/updateState";
-import { updateTriggers } from "@/lib/service/private/update/updateTrigger";
+import { updateSyncCron } from "@/lib/service/private/update/syncCron";
 import { checkSell } from "@/lib/service/private/update/checkSell";
 import { checkBuy } from "@/lib/service/private/update/checkBuy";
 import { maybeRunDailyTrigger } from "@/lib/service/private/maybeRunDailyTrigger";
@@ -44,7 +44,7 @@ async function runUpdate() {
     await maybeRunDailyTrigger();
     await checkSell();
     await checkBuy();
-
+    await updateSyncCron();
     console.log("✅ Cron global terminé avec succès.\n");
   } catch (error) {
     console.error("❌ Erreur dans le cron global :", error);

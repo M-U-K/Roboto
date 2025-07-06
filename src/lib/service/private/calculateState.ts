@@ -3,7 +3,7 @@ import { createInitialState } from "./create/createState";
 
 export async function calculateAndUpdateState() {
   const cryptos = await prisma.crypto.findMany();
-
+  const wallet = await prisma.wallet.findFirst();
   const nbrCrypto = cryptos.length;
 
   const nbrCryptoOn = cryptos.filter((c) => c.status === "pending-sell").length;
