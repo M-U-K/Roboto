@@ -1,7 +1,7 @@
 // lib/getKlines.ts
 export async function getKlines(symbol: string): Promise<any[]> {
   const res = await fetch(
-    `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=30`
+    `https://api.binance.com/api/v3/klines?symbol=${symbol}USDC&interval=1d&limit=30`
   );
 
   if (!res.ok) {

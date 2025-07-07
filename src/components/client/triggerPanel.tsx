@@ -23,7 +23,7 @@ export default function TriggerPanel({
 }) {
   const router = useRouter();
   const [trigger, setTrigger] = useState<TriggerData | null>(null);
-  const { lastSync } = useSync();
+  const { activateSync, syncCount } = useSync(); // 🔄 syncCount déclenche les maj
 
   useEffect(() => {
     const fetchTrigger = async () => {
@@ -37,7 +37,7 @@ export default function TriggerPanel({
     };
 
     fetchTrigger();
-  }, [lastSync]);
+  }, [syncCount]);
 
   if (!trigger) {
     return <div>Chargement...</div>;

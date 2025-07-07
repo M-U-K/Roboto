@@ -20,7 +20,7 @@ export default function SoldeGlobal({
 }) {
   const router = useRouter();
   const [wallet, setWallet] = useState<Wallet | null>(null);
-  const { lastSync } = useSync();
+  const { activateSync, syncCount } = useSync(); // 🔄 syncCount déclenche les maj
 
   useEffect(() => {
     const fetchWallet = async () => {
@@ -34,7 +34,7 @@ export default function SoldeGlobal({
     };
 
     fetchWallet();
-  }, [lastSync]);
+  }, [syncCount]);
 
   if (!wallet) {
     return <div>Chargement...</div>;

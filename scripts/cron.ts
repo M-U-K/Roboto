@@ -1,3 +1,3 @@
-import { startCronJobs } from "@/lib/service/private/core/cron";
+import { startCronJobs } from "@/lib//service/private/core/cron";
 
 startCronJobs();
