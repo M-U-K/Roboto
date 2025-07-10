@@ -3,6 +3,11 @@ import { prisma } from "@/lib/service/private/core/prisma";
 
 export async function getCryptoList() {
   const cryptos = await prisma.crypto.findMany({
+    where: {
+      symbol: {
+        not: "USDC",
+      },
+    },
     orderBy: { totalHoldings: "desc" },
     select: {
       symbol: true,
