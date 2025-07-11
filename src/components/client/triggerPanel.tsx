@@ -16,6 +16,31 @@ type TriggerData = {
   log: TriggerLog[];
 };
 
+function getColorClasses(volatility: number) {
+  if (volatility <= 2) {
+    // Rouge
+    return `
+      text-[#FF5C5C] border-[#FF5C5C] bg-transparent 
+      shadow-[0_0_8px_#FF5C5C] [filter:drop-shadow(0_0_1px_#FF5C5C)] 
+      [text-shadow:0_0_1px_#FF5C5C]
+    `;
+  } else if (volatility === 3) {
+    // Orange (couleur actuelle)
+    return `
+      text-gold border-gold bg-transparent 
+      shadow-[0_0_8px_#faff56] [filter:drop-shadow(0_0_1px_#faff56)] 
+      [text-shadow:0_0_1px_#faff56]
+    `;
+  } else {
+    // Vert (4 ou 5)
+    return `
+      text-[#00FFAA] border-[#00FFAA] bg-transparent 
+      shadow-[0_0_8px_#00FFAA] [filter:drop-shadow(0_0_1px_#00FFAA)] 
+      [text-shadow:0_0_1px_#00FFAA]
+    `;
+  }
+}
+
 export default function TriggerPanel({
   containerRef,
 }: {
@@ -55,10 +80,9 @@ export default function TriggerPanel({
             <div className="text-primary text-heading">Trigger</div>
           </div>
           <div
-            className="text-[24px] text-gold font-semibold px-[15px] py-[6px] rounded-[25px] border-[1px] 
-  border-gold bg-transparent inline-block 
-  shadow-[0_0_8px_#faff56] [filter:drop-shadow(0_0_1px_#faff56)] 
-  [text-shadow:0_0_1px_#faff56]"
+            className={`text-[24px] font-semibold px-[15px] py-[6px] rounded-[25px] border-[1px] inline-block
+    ${getColorClasses(trigger.volatility)}
+  `}
           >
             Volatilité à {trigger.volatility}
           </div>
