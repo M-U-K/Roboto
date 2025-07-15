@@ -105,8 +105,18 @@ export default function TriggerPanel({
               <span className={entry.newScore >= 0 ? "text-gain" : "text-loss"}>
                 {" "}
                 {entry.newScore >= 0 ? "+" : ""} {entry.newScore}
+              </span>
+              <span
+                className={
+                  entry.newScore - entry.delta >= 0 ? "text-gain" : "text-loss"
+                }
+              >
                 {" ("}
-                {entry.newScore - entry.delta}
+                <span>
+                  {entry.newScore - entry.delta >= 0
+                    ? `+${entry.newScore - entry.delta}`
+                    : `${entry.newScore - entry.delta}`}
+                </span>
                 {")"}
               </span>
             </div>
