@@ -1,11 +1,10 @@
 import { prisma } from "@/lib/service/private/core/prisma";
-import { getKlines } from "@/lib/binance/public/klines";
-import { adjustBuyTrigger } from "../adjustBuyTrigger";
 import {
-  placeMarketSellOrder,
   getLotSizeInfo,
   floorToStepSize,
+  placeMarketSellOrder,
 } from "@/lib/binance/private/placeSellOrder";
+import { pendingBuy } from "@/lib/service/private/database/pendingBuy";
 
 export async function sellCrypto(symbol: string) {
   const cryptoData = await prisma.crypto.findUnique({ where: { symbol } });
@@ -46,7 +45,6 @@ export async function sellCrypto(symbol: string) {
   const reinvested = gain > 0 ? gain / 8 : 0;
   const secured = gain > 0 ? (gain * 6) / 8 : 0;
   const extracted = gain > 0 ? gain / 8 : 0;
-  const newPot = gain > 0 ? cryptoData.pot + reinvested : cryptoData.pot;
 
   // MAJ TradeEntry
   const openTrade = await prisma.tradeEntry.findFirst({
@@ -74,43 +72,14 @@ export async function sellCrypto(symbol: string) {
     });
   }
 
-  // MAJ crypto + wallet
-  const klines = await getKlines(symbol);
-  await adjustBuyTrigger(symbol, klines);
-
-  await prisma.crypto.update({
-    where: { symbol },
-    data: {
-      totalHoldings: 0,
-      pot: newPot,
-      sellAt: 0,
-      lastSellPrice: avgSellPrice,
-      lastSellDate: new Date(),
-      status: "pending-buy",
-      gainLossPct: 0,
-    },
-  });
-
-  const wallet = await prisma.wallet.findFirst();
-  if (!wallet) throw new Error("Wallet introuvable");
-
-  await prisma.wallet.update({
-    where: { id: wallet.id },
-    data: {
-      USDC: wallet.USDC + totalRevenue,
-      cash: wallet.cash + extracted,
-      security: wallet.security + secured,
-    },
-  });
-
-  const state = await prisma.state.findFirst();
-  if (!state) throw new Error("State introuvable");
-
-  await prisma.state.update({
-    where: { id: state.id },
-    data: {
-      totalGain: state.totalGain + extracted,
-    },
+  // Appel unifié pour basculer la crypto en pending-buy et mettre à jour la DB
+  await pendingBuy({
+    symbol,
+    avgSellPrice,
+    totalRevenue,
+    extracted,
+    secured,
+    reinvested,
   });
 
   return {

@@ -5,6 +5,7 @@ import { updateSyncCron } from "@/lib/service/private/update/syncCron";
 import { checkSell } from "@/lib/service/private/update/checkSell";
 import { checkBuy } from "@/lib/service/private/update/checkBuy";
 import { maybeRunDailyTrigger } from "@/lib/service/private/maybeRunDailyTrigger";
+import { verifData } from "@/lib/service/private/update/verifData";
 
 let hasStarted = false;
 let isRunning = false;
@@ -38,6 +39,7 @@ async function runUpdate() {
   console.log(`⏰ Cron global lancé à ${time}`);
 
   try {
+    await verifData();
     await updateCrypto();
     await updateWallet();
     await updateState();

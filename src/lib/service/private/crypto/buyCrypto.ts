@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/service/private/core/prisma";
 import { placeMarketBuyOrder } from "@/lib/binance/private/placeMarketBuyOrder";
+import { pendingSell } from "@/lib/service/private/database/pendingSell";
 
 export async function buyCrypto(symbol: string) {
   const crypto = await prisma.crypto.findUnique({ where: { symbol } });
@@ -14,25 +15,15 @@ export async function buyCrypto(symbol: string) {
     );
   }
 
-  // 🔁 Appel purifié
   const { totalQty, avgPrice, valueBought } = await placeMarketBuyOrder(
     symbol,
     investment
   );
 
-  const newTotalHoldings = crypto.totalHoldings + valueBought;
-
-  await prisma.crypto.update({
-    where: { symbol },
-    data: {
-      totalHoldings: newTotalHoldings,
-      lastBuyPrice: avgPrice,
-      currentPrice: avgPrice,
-      triggerScore: 0,
-      buyTrigger: 0,
-      status: "pending-sell",
-      sellAt: newTotalHoldings * 1.05,
-    },
+  await pendingSell({
+    symbol,
+    valueBought,
+    avgPrice,
   });
 
   await prisma.wallet.update({
